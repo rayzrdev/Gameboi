@@ -36,7 +36,7 @@ object Gameboi : EventListener {
             val commandLabel = split[0]
             val args = split.slice(1..split.size)
 
-            commands.find { it.name == commandLabel }?.handle(event) ?: event.message.channel.sendMessage(":x: Invalid command `$commandLabel`!")
+            commands.find { it.name == commandLabel }?.handle(event, args) ?: event.message.channel.sendMessage(":x: Invalid command `$commandLabel`!")
         }
     }
 }
