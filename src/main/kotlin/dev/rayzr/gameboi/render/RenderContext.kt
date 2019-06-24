@@ -5,7 +5,7 @@ import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
-class RenderContext(val width: Int, val height: Int) {
+class RenderContext(width: Int, height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() {
