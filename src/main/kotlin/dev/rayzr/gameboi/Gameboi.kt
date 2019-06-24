@@ -1,5 +1,8 @@
 package dev.rayzr.gameboi
 
+import dev.rayzr.gameboi.command.Command
+import dev.rayzr.gameboi.command.HelpCommand
+import dev.rayzr.gameboi.command.PingCommand
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
