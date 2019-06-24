@@ -16,6 +16,11 @@ class RenderContext(width: Int, height: Int) {
         graphics.clearRect(0, 0, image.width, image.height)
     }
 
+    fun renderText(text: String, x: Int, y: Int, size: Int = 20) {
+        graphics.font = RenderUtils.font.deriveFont(size.toFloat())
+        graphics.drawString(text, x, y)
+    }
+
     fun toJpeg(): ByteArray {
         val outputStream = ByteOutputStream()
         ImageIO.write(image, "jpg", outputStream)
