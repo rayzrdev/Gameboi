@@ -1,9 +1,6 @@
 package dev.rayzr.gameboi
 
-import dev.rayzr.gameboi.command.Command
-import dev.rayzr.gameboi.command.Connect4Invite
-import dev.rayzr.gameboi.command.HelpCommand
-import dev.rayzr.gameboi.command.PingCommand
+import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
@@ -53,7 +50,8 @@ object Gameboi : EventListener {
             HelpCommand,
             PingCommand,
             // Invites
-            Connect4Invite
+            Connect4Invite,
+            FightGameTest
     )
 
     override fun onEvent(event: GenericEvent) {

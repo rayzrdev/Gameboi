@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.MessageChannel
 class Match(val game: Game, val channel: MessageChannel) {
     val players = mutableListOf<Player>()
     val renderContext = game.createRenderContext(this)
-    val data = game.createData(this)
+    var data: MatchData? = null
 
     fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
 
@@ -20,8 +20,13 @@ class Match(val game: Game, val channel: MessageChannel) {
 //        player.currentMatch = this
 
         if (players.size >= game.maxPlayers) {
-            game.begin(this)
+            begin()
         }
+    }
+
+    fun begin() {
+        data = game.createData(this)
+        game.begin(this)
     }
 
     fun end() {
