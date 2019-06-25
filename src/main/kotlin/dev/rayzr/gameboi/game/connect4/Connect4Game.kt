@@ -4,14 +4,17 @@ import dev.rayzr.gameboi.game.Game
 import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.MatchData
 import dev.rayzr.gameboi.game.Player
+import dev.rayzr.gameboi.render.RenderUtils
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageReaction
-import java.awt.Color
 import java.awt.RenderingHints
+import java.awt.image.BufferedImage
 import kotlin.math.max
 
-object Connect4Game : Game(500, 400, "Connect 4", 2) {
+object Connect4Game : Game(700, 600, "Connect 4", 2) {
     val emojis = listOf("\u0031\u20e3", "\u0032\u20e3", "\u0033\u20e3", "\u0034\u20e3", "\u0035\u20e3", "\u0036\u20e3")
+
+    val boardImage = RenderUtils.loadImage("connect4/board.png")!!
 
     private fun draw(match: Match, board: Array<Slot>) {
         val winner = getData(match).winner
@@ -27,20 +30,23 @@ object Connect4Game : Game(500, 400, "Connect 4", 2) {
                 setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
                 setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
 
-                color = Color.BLUE
-                fillRect(45, 60, 410, 340)
+//                color = Color.BLUE
+//                fillRect(45, 60, 410, 340)
 
-                val offsetX = 60
-                val offsetY = 70
-                val widthX = 65
-                val widthY = 55
+                drawImage(boardImage, 0, 0, 700, 600, null)
+
+                val offsetX = 120
+                val offsetY = 160
+                val widthX = 60
+                val widthY = 60
+                val gapX = 20
+                val gapY = 10
 
                 board.forEachIndexed { index, slot ->
                     val row = index / 6
                     val col = index % 6
 
-                    color = slot.color
-                    fillOval(offsetX + widthX * col, offsetY + widthY * row, 50, 50)
+                    drawImage(slot.image, offsetX + (widthX + gapX) * col, offsetY + (widthY + gapY) * row, widthX, widthY, null)
                 }
             }
 
@@ -99,7 +105,7 @@ object Connect4Game : Game(500, 400, "Connect 4", 2) {
         board[index] = slotType
         data.currentPlayer = (data.currentPlayer + 1) % 2
 
-        val row = index % 6
+        val row = index / 6
 
         if (checkForWins(slotType, row, col, board)) {
             data.winner = player
@@ -159,10 +165,10 @@ object Connect4Game : Game(500, 400, "Connect 4", 2) {
         return false
     }
 
-    enum class Slot(val color: Color) {
-        ONE(Color.RED),
-        TWO(Color.YELLOW),
-        EMPTY(Color.BLACK);
+    enum class Slot(val image: BufferedImage) {
+        ONE(RenderUtils.loadImage("connect4/player-one.png")!!),
+        TWO(RenderUtils.loadImage("connect4/player-two.png")!!),
+        EMPTY(BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
     }
 
     class Connect4MatchData : MatchData {
