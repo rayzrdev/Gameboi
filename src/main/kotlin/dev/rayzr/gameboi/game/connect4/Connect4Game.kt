@@ -2,6 +2,7 @@ package dev.rayzr.gameboi.game.connect4
 
 import dev.rayzr.gameboi.game.Game
 import dev.rayzr.gameboi.game.Match
+import dev.rayzr.gameboi.game.MatchData
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageReaction
@@ -37,17 +38,12 @@ object Connect4Game : Game(500, 400, "Connect 4", 2) {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun getBoard(match: Match): Array<Slot>? {
-        return match.data["board"] as? Array<Slot> ?: return null
-    }
+    private fun getData(match: Match) = match.data as Connect4MatchData
+
+    override fun createData(match: Match): MatchData = Connect4MatchData()
 
     override fun begin(match: Match) {
-        match.data["board"] = Array(36) { Connect4Game.Slot.EMPTY }
-
-        val board = getBoard(match)!!
-
-        draw(match, board)
+        draw(match, getData(match).board)
     }
 
     override fun handleMessage(player: Player, match: Match, message: Message) {
@@ -58,32 +54,38 @@ object Connect4Game : Game(500, 400, "Connect 4", 2) {
         // TODO: Check which column, update board, and re-send
         if (!emojis.contains(reaction.reactionEmote.name)) return
 
-        val c = when (reaction.reactionEmote.name) {
-            "\u0032\u20e3" -> 1
-            "\u0033\u20e3" -> 2
-            "\u0034\u20e3" -> 3
-            "\u0035\u20e3" -> 4
-            "\u0036\u20e3" -> 5
-            else -> 0
+
+        val data = getData(match)
+        val board = data.board
+
+        if (match.players.indexOf(player) != data.currentPlayer) {
+            reaction.removeReaction(player.user).queue()
+            return
         }
 
-        val board = getBoard(match)!!
+        val col = emojis.indexOf(reaction.reactionEmote.name)
+
+        val slotType = when (data.currentPlayer) {
+            0 -> Slot.ONE
+            else -> Slot.TWO
+        }
 
         var index = -1
         for (i in 1..6) {
-            val temp = (c + 1) * 6 - i
+            val temp = (col + 1) * 6 - i
             if (board[temp] == Connect4Game.Slot.EMPTY) {
                 index = temp
                 break
             }
         }
+
         if (index == -1) {
-            reaction.removeReaction(player.user).complete()
+            reaction.removeReaction(player.user).queue()
             return
         }
 
-        board[index] = Connect4Game.Slot.ONE
-        match.data["board"] = board
+        board[index] = slotType
+        data.currentPlayer = (data.currentPlayer + 1) % 2
 
         draw(match, board)
     }
@@ -92,5 +94,10 @@ object Connect4Game : Game(500, 400, "Connect 4", 2) {
         ONE(Color.RED),
         TWO(Color.YELLOW),
         EMPTY(Color.BLACK);
+    }
+
+    class Connect4MatchData : MatchData {
+        val board = Array(36) { Slot.EMPTY }
+        var currentPlayer = 0
     }
 }

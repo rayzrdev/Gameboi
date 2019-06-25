@@ -7,6 +7,7 @@ import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
 import org.omg.CORBA.Object
 import org.yaml.snakeyaml.Yaml
@@ -52,7 +53,7 @@ object Gameboi : EventListener {
     )
 
     override fun onEvent(event: GenericEvent) {
-        if (event is MessageReceivedEvent) {
+        if (event is GuildMessageReceivedEvent) {
             if (!event.message.contentRaw.startsWith(prefix)) {
                 return
             }

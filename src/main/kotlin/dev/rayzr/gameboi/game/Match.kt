@@ -1,12 +1,14 @@
 package dev.rayzr.gameboi.game
 
+import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.entities.MessageChannel
 
-class Match(val players: MutableList<Player>, val game: Game, val channel: MessageChannel) {
+class Match(val game: Game, val channel: MessageChannel) {
+    val players = mutableListOf<Player>()
     val renderContext = game.createRenderContext(this)
-    val data = mutableMapOf<String, Any>()
+    val data = game.createData(this)
 
-    fun canJoin(player: Player) = !players.contains(player) && players.size < game.maxPlayers
+    fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
 
     fun addPlayer(player: Player) {
         if (!canJoin(player)) {
@@ -14,6 +16,8 @@ class Match(val players: MutableList<Player>, val game: Game, val channel: Messa
         }
 
         players.add(player)
+        MatchManager[player.user] = this
+//        player.currentMatch = this
 
         if (players.size >= game.maxPlayers) {
             game.begin(this)

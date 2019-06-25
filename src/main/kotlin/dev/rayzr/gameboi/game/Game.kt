@@ -20,4 +20,5 @@ abstract class Game(private val width: Int, private val height: Int, val name: S
     abstract fun begin(match: Match)
     abstract fun handleMessage(player: Player, match: Match, message: Message)
     abstract fun handleReaction(player: Player, match: Match, reaction: MessageReaction)
+    abstract fun createData(match: Match): MatchData
 }

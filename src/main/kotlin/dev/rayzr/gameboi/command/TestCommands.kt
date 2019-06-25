@@ -5,11 +5,11 @@ import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.game.connect4.Connect4Game
 import dev.rayzr.gameboi.manager.MatchManager
 import dev.rayzr.gameboi.render.RenderContext
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import java.awt.Color
 
 object RenderTestCommand : Command("rendertest", "Tests the RenderContext system", "rendertest [message]") {
-    override fun handle(event: MessageReceivedEvent, args: List<String>) {
+    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val message = args.joinToString(" ").ifEmpty { "Test" }
 
         val context = RenderContext(event.channel, 500, 300)
@@ -32,11 +32,13 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
     }
 }
 
-object MatchTestCommand : Command("matchtest", "Creates a test match", "matchtest") {
-    override fun handle(event: MessageReceivedEvent, args: List<String>) {
-        val match = Match(mutableListOf(), Connect4Game, event.channel)
-        MatchManager[event.author] = match
+object MatchTestCommand : Command("matchtest", "Creates a test match", "matchtest <other>") {
+    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
+        val otherUser = event.message.mentionedMembers[0]
+
+        val match = Match(Connect4Game, event.channel)
+
         match.addPlayer(Player(event.author))
-        Connect4Game.begin(match)
+        match.addPlayer(Player(otherUser.user))
     }
 }
