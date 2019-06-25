@@ -23,4 +23,11 @@ class Match(val game: Game, val channel: MessageChannel) {
             game.begin(this)
         }
     }
+
+    fun end() {
+        players.forEach {
+            MatchManager.remove(it.user)
+            it.currentMatch = null
+        }
+    }
 }

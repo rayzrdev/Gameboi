@@ -10,4 +10,7 @@ object MatchManager {
 
     operator fun get(user: User) = matches[user]
     operator fun set(user: User, match: Match) = matches.put(user, match)
+    fun remove(user: User) {
+        matches.remove(user)
+    }
 }
