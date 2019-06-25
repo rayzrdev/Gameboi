@@ -6,10 +6,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
-import javax.imageio.IIOImage
 import javax.imageio.ImageIO
-import javax.imageio.ImageWriteParam
-import javax.imageio.stream.MemoryCacheImageOutputStream
 
 class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
@@ -30,9 +27,9 @@ class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
     }
 
     fun draw(callback: (Message) -> Unit = {}) {
-        val embed = EmbedBuilder().setImage("attachment://render.jpg").build()
+        val embed = EmbedBuilder().setImage("attachment://render.png").build()
 
-        channel.sendFile(toJpeg(), "render.jpg").embed(embed).queue {
+        channel.sendFile(toBytes(), "render.png").embed(embed).queue {
             lastMessage?.delete()?.queue()
 
             lastMessage = it
@@ -40,19 +37,21 @@ class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
         }
     }
 
-    fun toJpeg(): ByteArray {
+    fun toBytes(): ByteArray {
         val outputStream = ByteOutputStream()
 
-        val writer = ImageIO.getImageWritersByFormatName("jpg").next()
-        val params = writer.defaultWriteParam
-        params.compressionMode = ImageWriteParam.MODE_EXPLICIT
-        params.compressionQuality = 1.0f
+        ImageIO.write(image, "png", outputStream)
 
-        writer.output = MemoryCacheImageOutputStream(outputStream)
-        writer.write(null, IIOImage(image, null, null), params)
-
-        writer.dispose()
-        outputStream.close()
+//        val writer = ImageIO.getImageWritersByFormatName("jpg").next()
+//        val params = writer.defaultWriteParam
+//        params.compressionMode = ImageWriteParam.MODE_EXPLICIT
+//        params.compressionQuality = 1.0f
+//
+//        writer.output = MemoryCacheImageOutputStream(outputStream)
+//        writer.write(null, IIOImage(image, null, null), params)
+//
+//        writer.dispose()
+//        outputStream.close()
 
         return outputStream.bytes!! // TODO: No '!!'?
     }

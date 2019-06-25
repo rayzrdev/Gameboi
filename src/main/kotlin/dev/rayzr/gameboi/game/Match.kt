@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.MessageChannel
 
 class Match(val players: MutableList<Player>, val game: Game, val channel: MessageChannel) {
     val renderContext = game.createRenderContext(this)
+    val data = mutableMapOf<String, Any>()
 
     fun canJoin(player: Player) = !players.contains(player) && players.size < game.maxPlayers
 

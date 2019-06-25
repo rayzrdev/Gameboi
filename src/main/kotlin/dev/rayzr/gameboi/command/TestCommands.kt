@@ -3,6 +3,7 @@ package dev.rayzr.gameboi.command
 import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.game.connect4.Connect4Game
+import dev.rayzr.gameboi.manager.MatchManager
 import dev.rayzr.gameboi.render.RenderContext
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import java.awt.Color
@@ -34,6 +35,7 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
 object MatchTestCommand : Command("matchtest", "Creates a test match", "matchtest") {
     override fun handle(event: MessageReceivedEvent, args: List<String>) {
         val match = Match(mutableListOf(), Connect4Game, event.channel)
+        MatchManager[event.author] = match
         match.addPlayer(Player(event.author))
         Connect4Game.begin(match)
     }
