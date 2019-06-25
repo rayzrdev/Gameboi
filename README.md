@@ -1,7 +1,7 @@
 <img alt="Banner" src="res/banner.png" style="border-radius:10px">
 
 <h1 align="center">Gameboi</h1>
-<p align="center">*Made with :heart: by @Rayzr522 and @zp4rker*</p>
+<p align="center"><i>Made with :heart: by <a href="https://github.com/Rayzr522">@Rayzr522</a> and <a href="https://github.com/zp4rker">@zp4rker</a></i></p>
 [![Patreon](http://ionicabizau.github.io/badges/patreon.svg)](https://patreon.com/Rayzr522)
 [![Discord Badge](https://discordapp.com/api/guilds/282207139752050688/embed.png)](https://rayzr.dev/join)
 
