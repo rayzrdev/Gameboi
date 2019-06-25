@@ -1,6 +1,7 @@
 package dev.rayzr.gameboi.render
 
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import java.awt.Graphics2D
@@ -29,7 +30,9 @@ class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
     }
 
     fun draw(callback: (Message) -> Unit = {}) {
-        channel.sendFile(toJpeg(), "render.jpg").queue {
+        val embed = EmbedBuilder().setImage("attachment://render.jpg").build()
+
+        channel.sendFile(toJpeg(), "render.jpg").embed(embed).queue {
             lastMessage?.delete()?.queue()
 
             lastMessage = it
@@ -43,7 +46,7 @@ class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
         val writer = ImageIO.getImageWritersByFormatName("jpg").next()
         val params = writer.defaultWriteParam
         params.compressionMode = ImageWriteParam.MODE_EXPLICIT
-        params.compressionQuality = 0.9f
+        params.compressionQuality = 1.0f
 
         writer.output = MemoryCacheImageOutputStream(outputStream)
         writer.write(null, IIOImage(image, null, null), params)
