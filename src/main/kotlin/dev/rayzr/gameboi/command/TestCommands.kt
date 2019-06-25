@@ -8,7 +8,7 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
     override fun handle(event: MessageReceivedEvent, args: List<String>) {
         val message = args.joinToString(" ").ifEmpty { "Test" }
 
-        val context = RenderContext(500, 300)
+        val context = RenderContext(event.channel, 500, 300)
 
         context.graphics.run {
             color = Color.RED
@@ -20,8 +20,10 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
 
         context.renderText(message, 20, 30)
 
-        event.message.channel.sendFile(context.toJpeg(), "test.jpg").queue {
-            it.addReaction("\uD83E\uDD14").queue()
+        context.draw {
+            context.clear()
+            context.renderText(message, 50, 50, 50)
+            context.draw()
         }
     }
 }

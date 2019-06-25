@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageReaction
 
 abstract class Game(private val width: Int, private val height: Int, val name: String, val maxPlayers: Int) {
-    fun createRenderContext(): RenderContext = RenderContext(width, height)
+    fun createRenderContext(match: Match): RenderContext = RenderContext(match.channel, width, height)
 
     abstract fun begin(match: Match)
     abstract fun handleMessage(player: Player, match: Match, message: Message)
