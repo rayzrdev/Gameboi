@@ -1,9 +1,6 @@
 package dev.rayzr.gameboi
 
-import dev.rayzr.gameboi.command.Command
-import dev.rayzr.gameboi.command.HelpCommand
-import dev.rayzr.gameboi.command.PingCommand
-import dev.rayzr.gameboi.command.RenderTestCommand
+import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
@@ -49,7 +46,8 @@ object Gameboi : EventListener {
             HelpCommand,
             PingCommand,
             // Test
-            RenderTestCommand
+            RenderTestCommand,
+            MatchTestCommand
     )
 
     override fun onEvent(event: GenericEvent) {
