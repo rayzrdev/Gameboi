@@ -31,9 +31,9 @@ object Gameboi : EventListener {
     fun load() {
         val configFile = File("config.yml")
         if (!configFile.exists()) {
-            Files.copy(javaClass.getResourceAsStream("config.yml"), configFile.toPath())
+            Files.copy(javaClass.getResourceAsStream("/config.yml"), configFile.toPath())
 
-            print("No config.yml found! The default one has been copied to the current directory. Please set it up before running Gameboi again.")
+            println("No config.yml found! The default one has been copied to the current directory. Please set it up before running Gameboi again.")
             exitProcess(1)
         }
 
@@ -58,7 +58,7 @@ object Gameboi : EventListener {
 
             val split = event.message.contentRaw.substring(prefix.length).split(" ")
             val commandLabel = split[0]
-            val args = split.slice(1..split.size)
+            val args = split.slice(1 until split.size)
 
             commands.find { it.name == commandLabel }?.handle(event, args)
                     ?: event.message.channel.sendMessage(":x: Invalid command `$commandLabel`!")

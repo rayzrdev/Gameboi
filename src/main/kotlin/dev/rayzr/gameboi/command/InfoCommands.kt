@@ -11,6 +11,6 @@ object HelpCommand : Command("help", "Shows you help for Gameboi", "help [comman
 
 object PingCommand : Command("ping", "Shows you the bot's ping") {
     override fun handle(event: MessageReceivedEvent, args: List<String>) {
-        event.channel.sendMessage(":stopwatch: Pong! `${event.jda.gatewayPing}ms`")
+        event.channel.sendMessage(":stopwatch: Pong! `${event.jda.gatewayPing}ms`").queue()
     }
 }

@@ -11,7 +11,7 @@
     <properties>
         <kotlin.version>1.3.40</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <main.class>dev.rayzr.gameboi.Gameboi</main.class>
+        <main.class>dev.rayzr.gameboi.GameboiKt</main.class>
     </properties>
 
     <repositories>
@@ -37,6 +37,16 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.24</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
         </dependency>
     </dependencies>
 

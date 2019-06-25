@@ -10,8 +10,6 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
 
         val context = RenderContext(500, 300)
 
-//        context.clear()
-
         context.graphics.run {
             color = Color.RED
             fillRect(10, 10, 480, 30)
@@ -20,10 +18,10 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
             color = Color.WHITE
         }
 
-        context.renderText(message, 20, 40)
+        context.renderText(message, 20, 30)
 
         event.message.channel.sendFile(context.toJpeg(), "test.jpg").queue {
-            it.addReaction("thinking").queue()
+            it.addReaction("\uD83E\uDD14").queue()
         }
     }
 }
