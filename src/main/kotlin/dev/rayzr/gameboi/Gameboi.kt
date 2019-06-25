@@ -2,6 +2,7 @@ package dev.rayzr.gameboi
 
 import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.game.Player
+import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
@@ -18,7 +19,7 @@ fun main() {
     Gameboi.load()
 
     val jda = JDABuilder(Gameboi.token)
-            .addEventListeners(Gameboi)
+            .addEventListeners(Gameboi, ReactionListener)
             .build()
 }
 
