@@ -6,7 +6,7 @@
 [![Patreon](http://ionicabizau.github.io/badges/patreon.svg)](https://patreon.com/Rayzr522)
 [![Discord Badge](https://discordapp.com/api/guilds/282207139752050688/embed.png)](https://rayzr.dev/join)
 
-> A super fun Discord game bot made for Discord Hack Week 2019!
+> A simple Discord bot made for Discord Hack Week 2019 with a plethora of small games you can play, as well as a global currency and rewards system!
 
 **Gameboi** aims to be not only a cool entry for the **Discord Hack Week** of 2019, but also aims to be a full feature game bot to bring a new level of fun and games to your server!
 
