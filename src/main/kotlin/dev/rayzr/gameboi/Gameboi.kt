@@ -1,10 +1,14 @@
 package dev.rayzr.gameboi
 
-import dev.rayzr.gameboi.command.*
+import dev.rayzr.gameboi.command.Command
+import dev.rayzr.gameboi.command.Connect4Invite
+import dev.rayzr.gameboi.command.HelpCommand
+import dev.rayzr.gameboi.command.PingCommand
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -21,6 +25,8 @@ fun main() {
     val jda = JDABuilder(Gameboi.token)
             .addEventListeners(Gameboi, ReactionListener)
             .build()
+
+    println(jda.getInviteUrl(Permission.MESSAGE_MANAGE))
 }
 
 object Gameboi : EventListener {
