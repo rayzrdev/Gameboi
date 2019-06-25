@@ -15,14 +15,7 @@ abstract class Game(private val width: Int, private val height: Int, val name: S
         }
     }
 
-    fun addReactions(message: Message, reactions: List<String>) {
-//        if (reactions.isEmpty()) return
-//        message.addReaction(reactions[0]).queue {
-//            addReactions(message, reactions.slice(1 until reactions.size))
-//        }
-
-        reactions.forEach { message.addReaction(it).queue() }
-    }
+    fun addReactions(message: Message, reactions: List<String>) = reactions.forEach { message.addReaction(it).queue() }
 
     abstract fun begin(match: Match)
     abstract fun handleMessage(player: Player, match: Match, message: Message)
