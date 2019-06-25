@@ -33,6 +33,8 @@ object RenderTestCommand : Command("rendertest", "Tests the RenderContext system
 
 object MatchTestCommand : Command("matchtest", "Creates a test match", "matchtest") {
     override fun handle(event: MessageReceivedEvent, args: List<String>) {
-        val match = Connect4Game.begin(Match(mutableListOf(), Connect4Game, event.channel))
+        val match = Match(mutableListOf(), Connect4Game, event.channel)
+        match.addPlayer(Player(event.author))
+        Connect4Game.begin(match)
     }
 }
