@@ -6,7 +6,6 @@ import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
 import org.omg.CORBA.Object
@@ -47,9 +46,8 @@ object Gameboi : EventListener {
             // Info
             HelpCommand,
             PingCommand,
-            // Test
-            RenderTestCommand,
-            MatchTestCommand
+            // Invites
+            Connect4Invite
     )
 
     override fun onEvent(event: GenericEvent) {

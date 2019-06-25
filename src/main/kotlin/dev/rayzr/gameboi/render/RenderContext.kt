@@ -1,14 +1,14 @@
 package dev.rayzr.gameboi.render
 
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream
+import dev.rayzr.gameboi.game.Match
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.MessageChannel
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
-class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
+class RenderContext(val match: Match, width: Int, height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() = image.createGraphics()
@@ -27,9 +27,11 @@ class RenderContext(val channel: MessageChannel, width: Int, height: Int) {
     }
 
     fun draw(callback: (Message) -> Unit = {}) {
-        val embed = EmbedBuilder().setImage("attachment://render.png").build()
+        val embed = EmbedBuilder().setImage("attachment://render.png")
+                .setFooter("Players: ${match.players.joinToString(", ") { it.user.name }}")
+                .build()
 
-        channel.sendFile(toBytes(), "render.png").embed(embed).queue {
+        match.channel.sendFile(toBytes(), "render.png").embed(embed).queue {
             lastMessage?.delete()?.queue()
 
             lastMessage = it

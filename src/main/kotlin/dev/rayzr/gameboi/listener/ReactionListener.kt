@@ -2,6 +2,7 @@ package dev.rayzr.gameboi.listener
 
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.game.connect4.Connect4Game
+import dev.rayzr.gameboi.manager.InviteManager
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
@@ -18,9 +19,16 @@ object ReactionListener : EventListener {
             if (msg.author != msg.jda.selfUser) return
 
             val player = Player[event.user]
-            val match = MatchManager.currentMatches.find { it.renderContext.lastMessage?.id == msg.id } ?: return
+            val match = MatchManager.currentMatches.find { it.renderContext.lastMessage?.id == msg.id }
 
-            Connect4Game.handleReaction(player, match, event.reaction)
+            if (match != null) {
+                Connect4Game.handleReaction(player, match, event.reaction)
+                return
+            }
+
+            val invite = InviteManager.currentInvites.find { it.message.id == msg.id }
+
+            InviteManager.currentInvites.find { it.message.id == msg.id }?.handleReaction(event.reaction, msg, player)
         }
     }
 
