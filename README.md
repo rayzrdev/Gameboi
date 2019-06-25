@@ -2,6 +2,7 @@
 
 <h1 align="center">Gameboi</h1>
 <p align="center"><i>Made with :heart: by <a href="https://github.com/Rayzr522">@Rayzr522</a> and <a href="https://github.com/zp4rker">@zp4rker</a></i></p>
+
 [![Patreon](http://ionicabizau.github.io/badges/patreon.svg)](https://patreon.com/Rayzr522)
 [![Discord Badge](https://discordapp.com/api/guilds/282207139752050688/embed.png)](https://rayzr.dev/join)
 
