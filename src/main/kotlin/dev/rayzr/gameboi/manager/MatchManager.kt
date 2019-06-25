@@ -1,6 +1,6 @@
 package dev.rayzr.gameboi.manager
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match
+import dev.rayzr.gameboi.game.Match
 import net.dv8tion.jda.api.entities.User
 
 object MatchManager {

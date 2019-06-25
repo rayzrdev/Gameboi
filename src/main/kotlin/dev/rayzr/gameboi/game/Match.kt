@@ -1,7 +1,19 @@
 package dev.rayzr.gameboi.game
 
-import dev.rayzr.gameboi.render.RenderContext
-
-class Match(val players: List<Player>, val game: Game) {
+class Match(val players: MutableList<Player>, val game: Game) {
     val renderContext = game.createRenderContext()
+
+    fun canJoin(player: Player) = !players.contains(player) && players.size < game.maxPlayers
+
+    fun addPlayer(player: Player) {
+        if (!canJoin(player)) {
+            return
+        }
+
+        players.add(player)
+
+        if (players.size >= game.maxPlayers) {
+            game.begin(this)
+        }
+    }
 }

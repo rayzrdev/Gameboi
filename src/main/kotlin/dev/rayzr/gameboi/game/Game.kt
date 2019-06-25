@@ -1,7 +1,13 @@
 package dev.rayzr.gameboi.game
 
 import dev.rayzr.gameboi.render.RenderContext
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.MessageReaction
 
-class Game(private val width: Int, private val height: Int, val name: String) {
+abstract class Game(private val width: Int, private val height: Int, val name: String, val maxPlayers: Int) {
     fun createRenderContext(): RenderContext = RenderContext(width, height)
+
+    abstract fun begin(match: Match)
+    abstract fun handleMessage(player: Player, match: Match, message: Message)
+    abstract fun handleReaction(player: Player, match: Match, reaction: MessageReaction)
 }

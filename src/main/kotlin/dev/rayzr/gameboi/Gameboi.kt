@@ -4,6 +4,8 @@ import dev.rayzr.gameboi.command.Command
 import dev.rayzr.gameboi.command.HelpCommand
 import dev.rayzr.gameboi.command.PingCommand
 import dev.rayzr.gameboi.command.RenderTestCommand
+import dev.rayzr.gameboi.game.Player
+import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -59,9 +61,13 @@ object Gameboi : EventListener {
             val split = event.message.contentRaw.substring(prefix.length).split(" ")
             val commandLabel = split[0]
             val args = split.slice(1 until split.size)
+            val command = commands.find { it.name == commandLabel }
 
-            commands.find { it.name == commandLabel }?.handle(event, args)
-                    ?: event.message.channel.sendMessage(":x: Invalid command `$commandLabel`!")
+            if (command != null) {
+                command.handle(event, args)
+            } else {
+                MatchManager[event.author]?.run { game.handleMessage(Player[event.author], this, event.message) }
+            }
         }
     }
 }
