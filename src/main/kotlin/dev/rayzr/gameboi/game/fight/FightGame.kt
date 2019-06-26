@@ -96,17 +96,19 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
                     // Only draw winning player
                     drawPlayer(this, data.winner!!)
-                } else if (data.lastHitResult != HitResult.NONE) {
-                    val textImage = when (data.lastHitResult) {
-                        HitResult.HIT -> Images.textHit
-                        else -> Images.textMiss
-                    }
-
+                } else {
                     // Players
                     drawPlayer(this, data.playerOne)
                     drawPlayer(this, data.playerTwo)
 
-                    drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 13, null)
+                    if (data.lastHitResult != HitResult.NONE) {
+                        val textImage = when (data.lastHitResult) {
+                            HitResult.HIT -> Images.textHit
+                            else -> Images.textMiss
+                        }
+
+                        drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 13, null)
+                    }
                 }
             }
         }
