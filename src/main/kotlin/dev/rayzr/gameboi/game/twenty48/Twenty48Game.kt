@@ -4,13 +4,29 @@ import dev.rayzr.gameboi.game.Game
 import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.MatchData
 import dev.rayzr.gameboi.game.Player
+import dev.rayzr.gameboi.render.RenderUtils
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageReaction
-import java.awt.Color
 import java.awt.RenderingHints
+import java.awt.image.BufferedImage
 import kotlin.random.Random
 
-object Twenty48Game : Game(800, 700, "2048", 1) {
+object Images {
+    val background = RenderUtils.loadImage("2048/background.png")!!
+    val tile2 = RenderUtils.loadImage("2048/2.png")!!
+    val tile4 = RenderUtils.loadImage("2048/4.png")!!
+    val tile8 = RenderUtils.loadImage("2048/8.png")!!
+    val tile16 = RenderUtils.loadImage("2048/16.png")!!
+    val tile32 = RenderUtils.loadImage("2048/32.png")!!
+    val tile64 = RenderUtils.loadImage("2048/64.png")!!
+    val tile128 = RenderUtils.loadImage("2048/128.png")!!
+    val tile256 = RenderUtils.loadImage("2048/256.png")!!
+    val tile512 = RenderUtils.loadImage("2048/512.png")!!
+    val tile1024 = RenderUtils.loadImage("2048/1024.png")!!
+    val tile2048 = RenderUtils.loadImage("2048/2048.png")!!
+}
+
+object Twenty48Game : Game(600, 600, "2048", 1) {
     val emojis = listOf("\u2b05", "\u2b06", "\u2b07", "\u27a1")
 
     private fun draw(match: Match) {
@@ -29,16 +45,14 @@ object Twenty48Game : Game(800, 700, "2048", 1) {
                 setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
                 setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
 
-                color = Color.decode("#f48cb6")
-                fillRect(100, 50, 600, 600)
+                scale(10.0, 10.0)
+                drawImage(Images.background, 0, 0, null)
 
                 board.forEachIndexed { index, tile ->
                     val row = index / 4
                     val col = index % 4
 
-                    color = tile.color
-                    fillRoundRect(125 + col * 140, 75 + row * 140, 128, 128, 5, 5)
-                    if (tile.value > 0) renderText(tile.value.toString(), 189 + col * 140, 139 + row * 140)
+                    drawImage(tile.image, 7 + col * 12, 7 + row * 12, null)
                 }
             }
         }
@@ -146,19 +160,19 @@ object Twenty48Game : Game(800, 700, "2048", 1) {
 
     override fun createData(match: Match): MatchData = Twenty48MatchData()
 
-    enum class Tile(val value: Int, val color: Color) {
-        EMPTY(0, Color.WHITE),
-        TWO(2, Color(0x9b9c82)),
-        FOUR(4, Color(0xf7b69e)),
-        EIGHT(8, Color(0xf7e476)),
-        ONESIX(16, Color(0x6df7c1)),
-        THREETWO(32, Color(0xa1e55a)),
-        SIXFOUR(64, Color(0x11adc1)),
-        ONETWOEIGHT(128, Color(0x5bb361)),
-        TWOFIVESIX(256, Color(0x1e8875)),
-        FIVEONETWO(512, Color(0x606c81)),
-        ONEZEROTWOFOUR(1024, Color(0x6a3771)),
-        TWOZEROFOUREIGHT(2048, Color(0x393457))
+    enum class Tile(val value: Int, val image: BufferedImage) {
+        EMPTY(0, BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)),
+        TWO(2, Images.tile2),
+        FOUR(4, Images.tile4),
+        EIGHT(8, Images.tile8),
+        ONESIX(16, Images.tile16),
+        THREETWO(32, Images.tile32),
+        SIXFOUR(64, Images.tile64),
+        ONETWOEIGHT(128, Images.tile128),
+        TWOFIVESIX(256, Images.tile256),
+        FIVEONETWO(512, Images.tile512),
+        ONEZEROTWOFOUR(1024, Images.tile1024),
+        TWOZEROFOUREIGHT(2048, Images.tile2048)
     }
 
     enum class Direction(val diff: Int) {
