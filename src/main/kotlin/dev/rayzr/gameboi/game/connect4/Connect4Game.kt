@@ -16,15 +16,24 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
 
     val boardImage = RenderUtils.loadImage("connect4/board.png")!!
 
-    private fun draw(match: Match, board: Array<Slot>) {
-        val winner = getData(match).winner
+    private fun draw(match: Match) {
+        val data = getData(match)
+        val winner = data.winner
+        val board = data.board
+
         val emojisToRender = if (winner == null) {
             emojis
         } else {
             emptyList()
         }
 
-        render(match, emojisToRender) {
+        val message = if (winner == null) {
+            ":thinking: **${match.players[data.currentPlayer].user.name}**'s turn!"
+        } else {
+            ":tada: **${winner.user.name}** has won!"
+        }
+
+        render(match, emojisToRender, message) {
             clear()
             graphics.run {
                 setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -51,7 +60,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             }
 
             if (winner != null) {
-                renderText("Winner:\n${winner.user.name}", 10, 30)
+                renderText("${winner.user.name} wins!", 20, 50, 35)
             }
         }
     }
@@ -61,7 +70,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
     override fun createData(match: Match): MatchData = Connect4MatchData()
 
     override fun begin(match: Match) {
-        draw(match, getData(match).board)
+        draw(match)
     }
 
     override fun handleMessage(player: Player, match: Match, message: Message) {
@@ -69,9 +78,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
     }
 
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
-        // TODO: Check which column, update board, and re-send
         if (!emojis.contains(reaction.reactionEmote.name)) return
-
 
         val data = getData(match)
         val board = data.board
@@ -112,7 +119,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             match.end()
         }
 
-        draw(match, board)
+        draw(match)
     }
 
     private fun checkForWins(type: Slot, row: Int, col: Int, board: Array<Slot>): Boolean {

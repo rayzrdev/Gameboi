@@ -22,7 +22,7 @@ object Images {
 object FightGame : Game(800, 600, "Fight", 2) {
     val attacks = listOf(
             Attack(
-                    name = "Punch",
+                    name = "punch",
                     emoji = "\ud83e\udd1c", // right fist
                     damage = 5..7,
                     attackChance = 0.75,
@@ -33,18 +33,18 @@ object FightGame : Game(800, 600, "Fight", 2) {
                     )
             ),
             Attack(
-                    name = "Kick",
+                    name = "kick",
                     emoji = "\ud83d\udc5e", // shoe
                     damage = 6..10,
                     attackChance = 0.60,
                     messages = listOf(
                             "was kicked in the gut by",
-                            ":was drop-kicked by",
+                            "was drop-kicked by",
                             "was kicked in the butt by"
                     )
             ),
             Attack(
-                    name = "Slam",
+                    name = "slam",
                     emoji = "\u270a", // open fist
                     damage = 9..20,
                     attackChance = 0.35,
@@ -64,11 +64,27 @@ object FightGame : Game(800, 600, "Fight", 2) {
     private fun draw(match: Match) {
         val data = getData(match)
 
-        render(match, if (data.winner == null) {
+        val emojisToRender = if (data.winner == null) {
             attacks.map { it.emoji }
         } else {
             emptyList()
-        }) {
+        }
+
+        val messsage = if (data.winner == null) {
+            var output = ":thinking: **${data.currentPlayer.player.user.name}**'s turn!"
+
+            when (data.lastHitResult) {
+                HitResult.HIT -> output = ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**! **${data.currentPlayer.player.user.name}** is now down to **${data.currentPlayer.health}/100** HP.\n\n$output"
+                HitResult.MISS -> output = ":x: **${data.otherPlayer.player.user.name}** tried to ${data.lastAttack?.attack?.name} **${data.currentPlayer.player.user.name}**, but missed!\n\n$output"
+                HitResult.NONE -> Unit
+            }
+
+            output
+        } else {
+            ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**!\n\n:tada: **${data.winner!!.player.user.name}** has won!"
+        }
+
+        render(match, emojisToRender, messsage) {
             graphics.run {
                 scale(10.0, 10.0)
 
@@ -80,7 +96,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
                 drawPlayer(this, data.playerTwo)
 
                 if (data.winner != null) {
-                    this@render.renderText("Winner: ${data.winner?.player?.user?.name}", 20, 50, 35)
+                    this@render.renderText("${data.winner?.player?.user?.name} wins!", 20, 50, 35)
                 } else if (data.lastHitResult != HitResult.NONE) {
                     val textImage = when (data.lastHitResult) {
                         HitResult.HIT -> Images.textHit

@@ -26,10 +26,16 @@ class RenderContext(val match: Match, width: Int, height: Int) {
         }
     }
 
-    fun draw(callback: (Message) -> Unit = {}) {
-        val embed = EmbedBuilder().setImage("attachment://render.png")
+    fun draw(embedDescription: String? = null, callback: (Message) -> Unit = {}) {
+        val builder = EmbedBuilder().setImage("attachment://render.png")
                 .setFooter("Players: ${match.players.joinToString(", ") { it.user.name }}")
-                .build()
+                .setColor(0x353940)
+
+        if (embedDescription != null) {
+            builder.setDescription(embedDescription)
+        }
+
+        val embed = builder.build()
 
         match.channel.sendFile(toBytes(), "render.png").embed(embed).queue {
             lastMessage?.delete()?.queue()
