@@ -8,6 +8,7 @@ import dev.rayzr.gameboi.render.RenderUtils
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageReaction
 import java.awt.Graphics2D
+import kotlin.math.ceil
 
 object Images {
     val background = RenderUtils.loadImage("fight/bg.png")!!
@@ -57,13 +58,17 @@ object FightGame : Game(800, 600, "Fight", 2) {
     )
 
     override fun begin(match: Match) {
-        draw(match, getData(match))
-        // Temporary for testing purposes
-        match.end()
+        draw(match)
     }
 
-    private fun draw(match: Match, data: FightMatchData) {
-        render(match, attacks.map { it.emoji }) {
+    private fun draw(match: Match) {
+        val data = getData(match)
+
+        render(match, if (data.winner == null) {
+            attacks.map { it.emoji }
+        } else {
+            emptyList()
+        }) {
             graphics.run {
                 scale(10.0, 10.0)
 
@@ -74,8 +79,16 @@ object FightGame : Game(800, 600, "Fight", 2) {
                 drawPlayer(this, data.playerOne)
                 drawPlayer(this, data.playerTwo)
 
-                // TODO: Determine last hit & whether it was successful or not
-                drawImage(Images.textHit, 12, 14, null)
+                if (data.winner != null) {
+                    this@render.renderText("Winner: ${data.winner?.player?.user?.name}", 20, 50, 35)
+                } else if (data.lastHitResult != HitResult.NONE) {
+                    val textImage = when (data.lastHitResult) {
+                        HitResult.HIT -> Images.textHit
+                        else -> Images.textMiss
+                    }
+
+                    drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 13, null)
+                }
             }
         }
     }
@@ -87,7 +100,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
         graphics.drawImage(Images.hpBorder, player.offset.x, player.offset.y - 6, null)
         graphics.drawImage(Images.hpBackground, player.offset.x, player.offset.y - 6, null)
 
-        val hpWidth = ((player.health / 100.0) * Images.hpFiller.width).toInt()
+        val hpWidth = ceil((player.health / 100.0) * Images.hpFiller.width).toInt()
 
         graphics.setClip(player.offset.x, 0, hpWidth, 800)
         graphics.drawImage(Images.hpFiller, player.offset.x, player.offset.y - 6, null)
@@ -101,7 +114,38 @@ object FightGame : Game(800, 600, "Fight", 2) {
     }
 
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val data = getData(match)
+
+        if (player != data.currentPlayer.player) {
+            reaction.removeReaction(player.user).queue()
+            return
+        }
+
+        val attack = attacks.find { it.emoji == reaction.reactionEmote.name } ?: return
+
+        data.lastAttack = Hit(data.currentPlayer, attack)
+
+        if (Math.random() < attack.attackChance) {
+            // Hit!
+            data.lastHitResult = HitResult.HIT
+
+            val damage = attack.damage.random()
+            data.otherPlayer.health -= damage
+
+            if (data.otherPlayer.health < 0) {
+                data.otherPlayer.health = 0
+                data.winner = data.currentPlayer
+                match.end()
+            }
+        } else {
+            // Miss!
+
+            data.lastHitResult = HitResult.MISS
+        }
+
+        // Cycle
+        data.currentPlayerIndex = (data.currentPlayerIndex + 1) % 2
+        draw(match)
     }
 
     override fun createData(match: Match): MatchData = FightMatchData(match.players[0], match.players[1])

@@ -51,7 +51,7 @@ object Gameboi : EventListener {
             PingCommand,
             // Invites
             Connect4Invite,
-            FightGameTest
+            FightInvite
     )
 
     override fun onEvent(event: GenericEvent) {

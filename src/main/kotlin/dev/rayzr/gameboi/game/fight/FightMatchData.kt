@@ -13,10 +13,12 @@ val leftOffset = Point(12, 27)
 val rightOffset = Point(48, 27)
 
 class FightMatchData(playerOne: Player, playerTwo: Player) : MatchData {
-    val playerOne = FightPlayer(playerOne, defaultLeftSkin, leftOffset, 80)
-    val playerTwo = FightPlayer(playerTwo, defaultRightSkin, rightOffset, 35)
+    val playerOne = FightPlayer(playerOne, defaultLeftSkin, leftOffset)
+    val playerTwo = FightPlayer(playerTwo, defaultRightSkin, rightOffset)
     var currentPlayerIndex = 0
-    var winner: Player? = null
+    var winner: FightPlayer? = null
+    var lastAttack: Hit? = null
+    var lastHitResult: HitResult = HitResult.NONE
 
     val currentPlayer: FightPlayer
         get() = when (currentPlayerIndex) {
@@ -24,6 +26,19 @@ class FightMatchData(playerOne: Player, playerTwo: Player) : MatchData {
             else -> playerTwo
         }
 
+    val otherPlayer: FightPlayer
+        get() = when (currentPlayerIndex) {
+            0 -> playerTwo
+            else -> playerOne
+        }
 }
 
 class FightPlayer(val player: Player, val skin: BufferedImage, val offset: Point, var health: Int = 100)
+
+class Hit(val player: FightPlayer, val attack: Attack)
+
+enum class HitResult {
+    NONE,
+    HIT,
+    MISS
+}
