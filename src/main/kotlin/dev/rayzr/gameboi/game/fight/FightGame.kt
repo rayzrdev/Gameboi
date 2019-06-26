@@ -91,17 +91,20 @@ object FightGame : Game(800, 600, "Fight", 2) {
                 // Background
                 drawImage(Images.background, 0, 0, null)
 
-                // Players
-                drawPlayer(this, data.playerOne)
-                drawPlayer(this, data.playerTwo)
-
                 if (data.winner != null) {
                     this@render.renderText("${data.winner?.player?.user?.name} wins!", 20, 50, 35)
+
+                    // Only draw winning player
+                    drawPlayer(this, data.winner!!)
                 } else if (data.lastHitResult != HitResult.NONE) {
                     val textImage = when (data.lastHitResult) {
                         HitResult.HIT -> Images.textHit
                         else -> Images.textMiss
                     }
+
+                    // Players
+                    drawPlayer(this, data.playerOne)
+                    drawPlayer(this, data.playerTwo)
 
                     drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 13, null)
                 }
