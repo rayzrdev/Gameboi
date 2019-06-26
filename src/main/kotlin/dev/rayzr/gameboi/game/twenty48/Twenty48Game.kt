@@ -48,8 +48,8 @@ object Twenty48Game : Game(800, 700, "2048", 1) {
         val data = getData(match)
         val board = data.board
 
-        val tilePos = Random.nextInt(16)
-        while (board[tilePos] != Tile.EMPTY) {}
+        var tilePos = Random.nextInt(16)
+        while (board[tilePos] != Tile.EMPTY) tilePos = Random.nextInt(16)
         val tile = if (Random.nextInt(4) == 3) Tile.FOUR else Tile.TWO
         getData(match).board[tilePos] = tile
     }
@@ -79,15 +79,39 @@ object Twenty48Game : Game(800, 700, "2048", 1) {
                                 board[newIndex] = Tile.EMPTY
                             }
                         } else {
-                            val colStart = index % 4
-
+                            val row = index / 4
+                            val col = index % 4
+                            var newIndex = index
                         }
                     }
                 }
             }
             Direction.DOWN, Direction.RIGHT -> {
-                board.reversed().filter { it != Tile.EMPTY }.forEachIndexed { index, tile ->
+                for (index in board.size - 1 downTo 0) {
+                    val tile = board[index]
+                    if (tile != Tile.EMPTY) {
+                        if (direction == Direction.RIGHT) {
+                            val row = (index / 4) * 4
+                            val col = index % 4
+                            var newIndex = index
 
+                            for (i in 0..col) {
+                                if (newIndex + 1 <= (row + 3) && board[newIndex + 1] == Tile.EMPTY) newIndex = row + col + i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            if (newIndex + 1 <= (row + 3) && board[newIndex + 1] == tile) {
+                                val newTile = Tile.values().find { it.value == tile.value * 2 }!!
+                                board[newIndex + 1] = newTile
+                                board[newIndex] = Tile.EMPTY
+                            }
+                        } else {
+                            val row = index / 4
+                            val col = index % 4
+                            var newIndex = index
+                        }
+                    }
                 }
             }
         }
