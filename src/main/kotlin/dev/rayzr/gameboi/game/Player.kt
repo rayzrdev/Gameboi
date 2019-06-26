@@ -2,13 +2,13 @@ package dev.rayzr.gameboi.game
 
 import net.dv8tion.jda.api.entities.User
 
-class Player(val user: User, var currentMatch: Match? = null) {
+class Player private constructor(val user: User, var currentMatch: Match? = null) {
     companion object {
         // Cache
         // TODO: Clear cache at regular intervals for AFK players to avoid memory usage?
-        private val players: Map<User, Player> = emptyMap()
+        private val players: MutableMap<Long, Player> = mutableMapOf()
 
-        operator fun get(user: User) = players.getOrElse(user, { Player(user) })
+        operator fun get(user: User) = players.computeIfAbsent(user.idLong) { Player(user) }
     }
 
     override fun hashCode(): Int {

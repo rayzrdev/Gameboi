@@ -17,7 +17,7 @@ class Match(val game: Game, val channel: MessageChannel) {
 
         players.add(player)
         MatchManager[player.user] = this
-//        player.currentMatch = this
+        player.currentMatch = this
 
         if (players.size >= game.maxPlayers) {
             begin()

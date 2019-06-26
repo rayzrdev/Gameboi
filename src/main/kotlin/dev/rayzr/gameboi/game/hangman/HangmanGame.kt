@@ -15,15 +15,14 @@ object Images {
 
     val background = get("background.png")
     val post = get("post.png")
-    val dead = get("dead.png")
     val blank = get("blank.png")
 }
 
 object HangmanGame : Game(700, 600, "Hangman", 1) {
-    private fun draw(match: Match) {
+    private fun draw(match: Match, status: String) {
         val data = getData(match)
 
-        render(match, emptyList(), "Hangman") {
+        render(match, emptyList(), status) {
             clear()
             graphics.run {
                 setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -36,19 +35,103 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                 // Post
                 drawImage(Images.post, 10, 9, null)
 
-                // TODO: Draw failed letters
-                // TODO: Draw blanks
-                // TODO: Draw correctly guessed letters
+                // Incorrect letters
+                data.incorrectLetters.forEachIndexed { index, c ->
+                    val col = index % 6
+                    val row = index / 6
+
+                    val letter = Letter[c] ?: return@forEachIndexed
+                    drawImage(letter.image, 38 + col * 4, 8 + row * 6, null)
+                }
+
+                // Blanks & correct letters
+                val blankOffsetX = Images.background.width / 2 - data.word.length * 2
+                val blankOffsetY = 44
+
+                val word = if (data.isDead) {
+                    data.word
+                } else {
+                    data.blankedWord
+                }
+
+                word.forEachIndexed { index, c ->
+                    drawImage(Images.blank, blankOffsetX + index * 4, blankOffsetY, null)
+
+                    val letter = Letter[c] ?: return@forEachIndexed
+                    drawImage(letter.image, blankOffsetX + index * 4, blankOffsetY, null)
+                }
+
+                // Player
+                if (data.isDead) {
+                    drawImage(HangmanStage.stages[6].image, 20, 25, null)
+                } else if (data.currentStage >= 0) {
+                    for (i in 0..data.currentStage) {
+                        drawImage(HangmanStage.stages[i].image, 22, 14, null)
+                    }
+                }
+
+                // Stop being gay, kotlin
+                return@run
+            }
+
+            if (data.isDead) {
+                renderText("You died!", 20, 40, 35)
+            } else if (data.hasWon) {
+                renderText("You won!", 20, 40, 35)
             }
         }
     }
 
     override fun begin(match: Match) {
-        draw(match)
+        draw(match, ":thinking: Type a letter in chat to guess it!")
+        println("New match word: ${getData(match).word}")
     }
 
     override fun handleMessage(player: Player, match: Match, message: Message) {
-        // TODO: Get user input!
+        if (!match.players.contains(player)) {
+            // Not playing this game
+            return
+        }
+
+        val input = message.contentRaw.toLowerCase()
+        if (input.length > 1) {
+            // More than one letter
+            return
+        }
+
+        val letter = input[0]
+        if (Letter[letter] == null) {
+            // Ignore invalid letters
+            return
+        }
+
+        message.delete().queue()
+
+        val data = getData(match)
+
+        if (data.attemptedLetters.contains(letter)) {
+            draw(match, ":no_entry_sign: You have already tried that letter!")
+        } else {
+            val displayLetter = letter.toUpperCase()
+
+            data.attemptedLetters.add(letter)
+            if (data.incorrectLetters.contains(letter)) {
+                if (data.isDead) {
+                    draw(match, ":x: You tried **$displayLetter**, but it is not part of the word! The word was **${data.word}**. You have died!")
+                    match.end()
+                } else {
+                    draw(match, ":x: You tried **$displayLetter**, but it is not part of the word!")
+                }
+            } else {
+                // All blanks filled
+                if (!data.blankedWord.contains(" ")) {
+                    draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations!")
+                    match.end()
+                } else {
+                    draw(match, ":white_check_mark: You tried **$displayLetter** and you guessed correctly!")
+                }
+            }
+        }
     }
 
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {

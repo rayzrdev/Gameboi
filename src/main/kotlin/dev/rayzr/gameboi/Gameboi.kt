@@ -2,6 +2,7 @@ package dev.rayzr.gameboi
 
 import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.game.Player
+import dev.rayzr.gameboi.listener.MessageListener
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
@@ -20,7 +21,7 @@ fun main() {
     Gameboi.load()
 
     val jda = JDABuilder(Gameboi.token)
-            .addEventListeners(Gameboi, ReactionListener)
+            .addEventListeners(Gameboi, ReactionListener, MessageListener)
             .build()
 
     println(jda.getInviteUrl(Permission.MESSAGE_MANAGE))
@@ -53,7 +54,8 @@ object Gameboi : EventListener {
             Connect4Invite,
             FightInvite,
             // Test commands
-            Twenty48TestCommand
+            Twenty48TestCommand,
+            HangmanTestCommand
     )
 
     override fun onEvent(event: GenericEvent) {
