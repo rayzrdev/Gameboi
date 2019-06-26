@@ -28,7 +28,7 @@ class RenderContext(val match: Match, width: Int, height: Int) {
 
     fun draw(embedDescription: String? = null, callback: (Message) -> Unit = {}) {
         val builder = EmbedBuilder().setImage("attachment://render.png")
-                .setFooter("Players: ${match.players.joinToString(", ") { it.user.name }}")
+                .setFooter("${match.game.name} || Players: ${match.players.joinToString(", ") { it.user.name }}")
                 .setColor(0x353940)
 
         if (embedDescription != null) {
