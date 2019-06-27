@@ -1,12 +1,12 @@
 package dev.rayzr.gameboi.render
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream
 import dev.rayzr.gameboi.game.Match
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
 class RenderContext(val match: Match, val width: Int, val height: Int) {
@@ -71,10 +71,10 @@ class RenderContext(val match: Match, val width: Int, val height: Int) {
     }
 
     fun toBytes(): ByteArray {
-        val outputStream = ByteOutputStream()
+        val outputStream = ByteArrayOutputStream()
 
         ImageIO.write(image, "png", outputStream)
 
-        return outputStream.bytes!!
+        return outputStream.toByteArray()
     }
 }
