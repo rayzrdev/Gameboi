@@ -92,7 +92,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
                 drawImage(Images.background, 0, 0, null)
 
                 if (data.winner != null) {
-                    this@render.renderText("${data.winner?.player?.user?.name} wins!", 20, 50, 35)
+                    this@render.renderCenteredText("${data.winner?.player?.user?.name} wins!")
 
                     // Only draw winning player
                     drawPlayer(this, data.winner!!)

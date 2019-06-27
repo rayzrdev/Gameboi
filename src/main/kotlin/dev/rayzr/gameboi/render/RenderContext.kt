@@ -8,7 +8,7 @@ import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
-class RenderContext(val match: Match, width: Int, height: Int) {
+class RenderContext(val match: Match, val width: Int, val height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() = image.createGraphics()
@@ -19,10 +19,20 @@ class RenderContext(val match: Match, width: Int, height: Int) {
         graphics.clearRect(0, 0, image.width, image.height)
     }
 
-    fun renderText(text: String, x: Int, y: Int, size: Int = 20) {
+    fun renderText(text: String, x: Int, y: Int, size: Int = 35) {
         graphics.run {
             font = RenderUtils.font.deriveFont(size.toFloat())
             drawString(text, x, y)
+        }
+    }
+
+    fun renderCenteredText(text: String, x: Int = width / 2, y: Int = 50, size: Int = 35) {
+        graphics.run {
+            font = RenderUtils.font.deriveFont(size.toFloat())
+
+            val bounds = font.getStringBounds(text, fontRenderContext)
+
+            drawString(text, x - (bounds.width / 2).toInt(), y - (bounds.height / 2).toInt())
         }
     }
 
@@ -50,17 +60,6 @@ class RenderContext(val match: Match, width: Int, height: Int) {
 
         ImageIO.write(image, "png", outputStream)
 
-//        val writer = ImageIO.getImageWritersByFormatName("jpg").next()
-//        val params = writer.defaultWriteParam
-//        params.compressionMode = ImageWriteParam.MODE_EXPLICIT
-//        params.compressionQuality = 1.0f
-//
-//        writer.output = MemoryCacheImageOutputStream(outputStream)
-//        writer.write(null, IIOImage(image, null, null), params)
-//
-//        writer.dispose()
-//        outputStream.close()
-
-        return outputStream.bytes!! // TODO: No '!!'?
+        return outputStream.bytes!!
     }
 }

@@ -74,10 +74,9 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                 return@run
             }
 
-            if (data.isDead) {
-                renderText("You died!", 20, 40, 35)
-            } else if (data.hasWon) {
-                renderText("You won!", 20, 40, 35)
+            when {
+                data.isDead -> renderCenteredText("You died!")
+                data.hasWon -> renderCenteredText("You won!")
             }
         }
     }

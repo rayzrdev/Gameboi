@@ -62,8 +62,8 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             }
 
             when {
-                board.any { it == Tile.TWOZEROFOUREIGHT } -> renderText("You won!", 20, 50, 35)
-                board.none { it == Tile.EMPTY } -> renderText("You lost!", 20, 50 , 35)
+                board.any { it == Tile.TWOZEROFOUREIGHT } -> renderCenteredText("You won!")
+                board.none { it == Tile.EMPTY } -> renderCenteredText("You lost!")
             }
         }
     }

@@ -59,8 +59,8 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
                 }
             }
 
-            if (winner != null) {
-                renderText("${winner.user.name} wins!", 20, 50, 35)
+            when {
+                winner != null -> renderCenteredText("${winner.user.name} wins!")
             }
         }
     }
