@@ -124,13 +124,13 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                             val row = (index / 4) * 4 + 3
                             var newIndex = index
 
-                            for (i in 0..2) {
+                            for (i in 0..3) {
                                 if (index + i <= row && board[index + i] == Tile.EMPTY) newIndex = index + i
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
 
-                            for (i in 0..2) {
+                            for (i in 0..3) {
                                 newIndex = index + i
                                 if (newIndex + 1 <= row && board[newIndex] == board[newIndex + 1]) {
                                     val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
