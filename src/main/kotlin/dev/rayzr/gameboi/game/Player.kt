@@ -1,5 +1,7 @@
 package dev.rayzr.gameboi.game
 
+import dev.rayzr.gameboi.data.DataManager
+import dev.rayzr.gameboi.data.PlayerData
 import net.dv8tion.jda.api.entities.User
 
 class Player private constructor(val user: User, var currentMatch: Match? = null) {
@@ -10,6 +12,9 @@ class Player private constructor(val user: User, var currentMatch: Match? = null
 
         operator fun get(user: User) = players.computeIfAbsent(user.idLong) { Player(user) }
     }
+
+    fun getData() = DataManager.getPlayerData(this)
+    fun editData(action: PlayerData.() -> Unit) = DataManager.editPlayerData(this, action)
 
     override fun hashCode(): Int {
         return user.idLong.hashCode()

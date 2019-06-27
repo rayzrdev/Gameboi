@@ -1,12 +1,12 @@
 package dev.rayzr.gameboi
 
 import dev.rayzr.gameboi.command.*
+import dev.rayzr.gameboi.data.DataManager
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.MessageListener
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -20,11 +20,13 @@ import kotlin.system.exitProcess
 fun main() {
     Gameboi.load()
 
-    val jda = JDABuilder(Gameboi.token)
+    // Init JDA
+    JDABuilder(Gameboi.token)
             .addEventListeners(Gameboi, ReactionListener, MessageListener)
             .build()
 
-    println(jda.getInviteUrl(Permission.MESSAGE_MANAGE))
+    // TODO: Temporary, only while we're using flat files
+    DataManager.load()
 }
 
 object Gameboi : EventListener {
