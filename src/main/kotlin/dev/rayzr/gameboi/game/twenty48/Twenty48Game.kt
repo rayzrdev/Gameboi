@@ -82,20 +82,36 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                             var newIndex = index
 
                             for (i in 0..col) {
-                                if (newIndex - 1 >= row && board[newIndex - 1] == Tile.EMPTY) newIndex = row + col - i
+                                if (index - i >= row && board[index - i] == Tile.EMPTY) newIndex = index - i
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
 
-                            if (newIndex - 1 >= row && board[newIndex - 1] == tile) {
-                                val newTile = Tile.values().find { it.value == tile.value * 2 }!!
-                                board[newIndex - 1] = newTile
-                                board[newIndex] = Tile.EMPTY
+                            for (i in 0..col) {
+                                newIndex = index - i
+                                if (newIndex - 1 >= row && board[newIndex] == board[newIndex - 1]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex - 1] = newTile
+                                }
                             }
                         } else {
-                            val row = index / 4
-                            val col = index % 4
                             var newIndex = index
+
+                            for (i in 0..12 step 4) {
+                                if (index - i >= 0 && board[index - i] == Tile.EMPTY) newIndex = index - i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            for (i in 0..12 step 4) {
+                                newIndex = index - i
+                                if (newIndex - 4 >= 0 && board[newIndex] == board[newIndex - 4]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex - 4] = newTile
+                                }
+                            }
                         }
                     }
                 }
@@ -105,25 +121,40 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                     val tile = board[index]
                     if (tile != Tile.EMPTY) {
                         if (direction == Direction.RIGHT) {
-                            val row = (index / 4) * 4
-                            val col = index % 4
+                            val row = (index / 4) * 4 + 3
                             var newIndex = index
 
-                            for (i in 0..col) {
-                                if (newIndex + 1 <= (row + 3) && board[newIndex + 1] == Tile.EMPTY) newIndex = row + col + i
+                            for (i in 0..2) {
+                                if (index + i <= row && board[index + i] == Tile.EMPTY) newIndex = index + i
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
 
-                            if (newIndex + 1 <= (row + 3) && board[newIndex + 1] == tile) {
-                                val newTile = Tile.values().find { it.value == tile.value * 2 }!!
-                                board[newIndex + 1] = newTile
-                                board[newIndex] = Tile.EMPTY
+                            for (i in 0..2) {
+                                newIndex = index + i
+                                if (newIndex + 1 <= row && board[newIndex] == board[newIndex + 1]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex + 1] = newTile
+                                }
                             }
                         } else {
-                            val row = index / 4
-                            val col = index % 4
                             var newIndex = index
+
+                            for (i in 0..12 step 4) {
+                                if (index + i <= 15 && board[index + i] == Tile.EMPTY) newIndex = index + i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            for (i in 0..12 step 4) {
+                                newIndex = index + i
+                                if (newIndex + 4 <= 15 && board[newIndex] == board[newIndex + 4]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex + 4] = newTile
+                                }
+                            }
                         }
                     }
                 }
@@ -139,9 +170,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         draw(match)
     }
 
-    override fun handleMessage(player: Player, match: Match, message: Message) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun handleMessage(player: Player, match: Match, message: Message) {}
 
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
         if (!emojis.contains(reaction.reactionEmote.name)) return
