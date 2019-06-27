@@ -67,7 +67,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                     match.players[0].editData { updateStatBy("2048.wins", 1) }
                     match.end()
                 }
-                board.none { it == Tile.EMPTY } -> renderCenteredText("You lost!")
+                board.none { it == Tile.EMPTY } -> {
+                    // TODO: Doesn't check for adjacent moves?
+                    renderCenteredText("You lost!")
+                    match.end()
+                }
             }
         }
     }

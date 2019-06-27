@@ -55,11 +55,14 @@ object Gameboi : EventListener {
             HelpCommand,
             PingCommand,
             // Invites
+            // Multiplayer
             Connect4Invite,
             FightInvite,
-            // Singleplayer Games
-            Twenty48,
-            Hangman
+            // Singleplayer
+            Twenty48Invite,
+            HangmanInvite,
+            // Match commands
+            QuitCommand
     )
 
     override fun onEvent(event: GenericEvent) {

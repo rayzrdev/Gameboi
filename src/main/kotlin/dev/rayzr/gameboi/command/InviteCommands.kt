@@ -45,13 +45,13 @@ object FightInvite : Command("fight", "Invites a player to play Fight with you!"
     }
 }
 
-object Twenty48: Command("2048", "Starts a 2048 game.", "2048") {
+object Twenty48Invite: Command("2048", "Starts a 2048 game.", "2048") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         InviteManager.singlePlayer(event.message, Player[event.author], Twenty48Game)
     }
 }
 
-object Hangman: Command("hangman", "Starts a hangman game.", "hangman") {
+object HangmanInvite: Command("hangman", "Starts a hangman game.", "hangman") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         InviteManager.singlePlayer(event.message, Player[event.author], HangmanGame)
     }
