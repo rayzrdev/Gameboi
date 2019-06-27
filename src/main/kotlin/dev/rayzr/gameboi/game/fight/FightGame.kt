@@ -131,7 +131,6 @@ object FightGame : Game(800, 600, "Fight", 2) {
     private fun getData(match: Match): FightMatchData = match.data as FightMatchData
 
     override fun handleMessage(player: Player, match: Match, message: Message) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
@@ -146,6 +145,8 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
         data.lastAttack = Hit(data.currentPlayer, attack)
 
+        player.editData { updateStatBy("fight.attack.${attack.name}", 1) }
+
         if (Math.random() < attack.attackChance) {
             // Hit!
             data.lastHitResult = HitResult.HIT
@@ -153,13 +154,22 @@ object FightGame : Game(800, 600, "Fight", 2) {
             val damage = attack.damage.random()
             data.otherPlayer.health -= damage
 
+            player.editData {
+                updateStatBy("fight.damage-dealt", damage)
+                updateStatBy("fight.successful-attacks", 1)
+            }
+            data.otherPlayer.player.editData { updateStatBy("fight.damage-taken", damage) }
+
             if (data.otherPlayer.health < 0) {
                 data.otherPlayer.health = 0
                 data.winner = data.currentPlayer
+
+                player.editData { updateStatBy("fight.wins", 1) }
                 match.end()
             }
         } else {
             // Miss!
+            player.editData { updateStatBy("fight.missed-attacks", 1) }
 
             data.lastHitResult = HitResult.MISS
         }

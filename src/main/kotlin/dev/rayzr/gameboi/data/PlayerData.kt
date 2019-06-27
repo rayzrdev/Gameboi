@@ -9,6 +9,7 @@ data class PlayerData(var coins: Int, val stats: MutableMap<String, Int>) {
     }
 
     fun getStat(name: String, default: Int = 0) = stats.computeIfAbsent(name) { default }
+    fun setStat(name: String, value: Int) = stats.put(name, value)
 
     fun updateStatBy(name: String, amount: Int) = stats.put(name, stats.getOrDefault(name, 0) + amount)
 }

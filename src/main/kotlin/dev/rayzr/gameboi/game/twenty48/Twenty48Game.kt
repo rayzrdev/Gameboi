@@ -62,7 +62,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             }
 
             when {
-                board.any { it == Tile.TWOZEROFOUREIGHT } -> renderCenteredText("You won!")
+                board.any { it == Tile.TWOZEROFOUREIGHT } -> {
+                    renderCenteredText("You won!")
+                    match.players[0].editData { updateStatBy("2048.wins", 1) }
+                    match.end()
+                }
                 board.none { it == Tile.EMPTY } -> renderCenteredText("You lost!")
             }
         }
@@ -182,6 +186,15 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         }
 
         if (moved) {
+            val score = board.sumBy { it.value }
+
+            match.players[0].editData {
+                updateStatBy("2048.total-moves", 1)
+                if (getStat("2048.highest-score") < score) {
+                    setStat("2048.highest-score", score)
+                }
+            }
+
             addTile(match)
             draw(match)
         }

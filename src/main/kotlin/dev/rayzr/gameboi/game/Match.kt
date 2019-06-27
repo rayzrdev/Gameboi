@@ -27,6 +27,12 @@ class Match(val game: Game, val channel: MessageChannel) {
     fun begin() {
         data = game.createData(this)
         game.begin(this)
+        players.forEach {
+            it.editData {
+                updateStatBy("games-played.${game.name}", 1)
+                updateStatBy("games-played.total", 1)
+            }
+        }
     }
 
     fun end() {

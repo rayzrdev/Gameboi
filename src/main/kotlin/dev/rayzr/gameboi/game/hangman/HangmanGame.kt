@@ -114,7 +114,10 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
             val displayLetter = letter.toUpperCase()
 
             data.attemptedLetters.add(letter)
+
             if (data.incorrectLetters.contains(letter)) {
+                player.editData { updateStatBy("hangman.total-guesses", 1) }
+
                 if (data.isDead) {
                     draw(match, ":x: You tried **$displayLetter**, but it is not part of the word! The word was **${data.word}**. You have died!")
                     match.end()
@@ -122,8 +125,15 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                     draw(match, ":x: You tried **$displayLetter**, but it is not part of the word!")
                 }
             } else {
+                player.editData {
+                    updateStatBy("hangman.total-guesses", 1)
+                    updateStatBy("hangman.correct-guesses", 1)
+                }
+
                 // All blanks filled
                 if (!data.blankedWord.contains(" ")) {
+                    player.editData { updateStatBy("hangman.wins", 1) }
+
                     draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations!")
                     match.end()
                 } else {

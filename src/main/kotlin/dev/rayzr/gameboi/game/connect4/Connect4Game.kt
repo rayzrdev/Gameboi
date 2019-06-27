@@ -74,7 +74,6 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
     }
 
     override fun handleMessage(player: Player, match: Match, message: Message) {
-        // TODO: Ignore?
     }
 
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
@@ -94,6 +93,8 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             0 -> Slot.ONE
             else -> Slot.TWO
         }
+
+        player.editData { updateStatBy("connect4.played-${slotType.colorName}", 1) }
 
         var index = -1
         for (i in 5.downTo(0)) {
@@ -172,10 +173,10 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
         return false
     }
 
-    enum class Slot(val image: BufferedImage) {
-        ONE(RenderUtils.loadImage("connect4/player-one.png")!!),
-        TWO(RenderUtils.loadImage("connect4/player-two.png")!!),
-        EMPTY(BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+    enum class Slot(val colorName: String, val image: BufferedImage) {
+        ONE("red", RenderUtils.loadImage("connect4/player-one.png")!!),
+        TWO("yellow", RenderUtils.loadImage("connect4/player-two.png")!!),
+        EMPTY("n/a", BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
     }
 
     class Connect4MatchData : MatchData {
