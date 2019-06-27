@@ -31,6 +31,7 @@ object Gameboi : EventListener {
     val yaml = Yaml()
     lateinit var prefix: String
     lateinit var token: String
+    var errorLife: Long = 0
 
     fun load() {
         val configFile = File("config.yml")
@@ -44,6 +45,7 @@ object Gameboi : EventListener {
         val output = yaml.load(FileInputStream(configFile)) as Map<String, Object>
         prefix = output["prefix"].toString()
         token = output["token"].toString()
+        errorLife = if (output["error-life"] == null) 15000 else output["error-life"].toString().toLong()
     }
 
     private val commands: List<Command> = listOf(
@@ -53,9 +55,9 @@ object Gameboi : EventListener {
             // Invites
             Connect4Invite,
             FightInvite,
-            // Test commands
-            Twenty48TestCommand,
-            HangmanTestCommand
+            // Singleplayer Games
+            Twenty48,
+            Hangman
     )
 
     override fun onEvent(event: GenericEvent) {
