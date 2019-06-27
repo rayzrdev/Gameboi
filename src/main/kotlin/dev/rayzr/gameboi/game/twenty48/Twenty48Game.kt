@@ -33,13 +33,18 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         val data = getData(match)
         val board = data.board
 
-        val emojisToRender = if (board.any { it != Tile.TWOZEROFOUREIGHT }) {
-            emojis
-        } else {
-            emptyList()
+        val emojisToRender = when {
+            board.any { it == Tile.TWOZEROFOUREIGHT } || board.none { it == Tile.EMPTY } -> emptyList()
+            else -> emojis
         }
 
-        render(match, emojisToRender, "2048") {
+        val message = when {
+            board.any { it == Tile.TWOZEROFOUREIGHT } -> ":tada: **${match.players[0].user.name}** has won!"
+            board.none { it == Tile.EMPTY } -> ":thumbsdown: **${match.players[0].user.name}** has lost!"
+            else -> ":thinking: **${match.players[0].user.name}** is playing 2048!"
+        }
+
+        render(match, emojisToRender, message) {
             clear()
             graphics.run {
                 setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -55,6 +60,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                     drawImage(tile.image, 7 + col * 12, 7 + row * 12, null)
                 }
             }
+
+            when {
+                board.any { it == Tile.TWOZEROFOUREIGHT } -> renderText("${match.players[0].user.name} has won!", 20, 50, 35)
+                board.none { it == Tile.EMPTY } -> renderText("${match.players[0].user.name} has lost!", 20, 50 , 35)
+            }
         }
     }
 
@@ -68,9 +78,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         getData(match).board[tilePos] = tile
     }
 
-    private fun moveTiles(match: Match, direction: Direction) {
+    private fun moveTiles(match: Match, direction: Direction): Boolean {
         val data = getData(match)
         val board = data.board
+
+        var moved = false
 
         when (direction) {
             Direction.LEFT, Direction.UP -> {
@@ -86,6 +98,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
+                            if (index != newIndex) moved = true
 
                             for (i in 0..col) {
                                 newIndex = index - i
@@ -93,6 +106,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                                     val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
                                     board[newIndex] = Tile.EMPTY
                                     board[newIndex - 1] = newTile
+                                    moved = true
                                 }
                             }
                         } else {
@@ -103,6 +117,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
+                            if (index != newIndex) moved = true
 
                             for (i in 0..12 step 4) {
                                 newIndex = index - i
@@ -110,6 +125,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                                     val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
                                     board[newIndex] = Tile.EMPTY
                                     board[newIndex - 4] = newTile
+                                    moved = true
                                 }
                             }
                         }
@@ -129,6 +145,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
+                            if (index != newIndex) moved = true
 
                             for (i in 0..3) {
                                 newIndex = index + i
@@ -136,6 +153,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                                     val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
                                     board[newIndex] = Tile.EMPTY
                                     board[newIndex + 1] = newTile
+                                    moved = true
                                 }
                             }
                         } else {
@@ -146,6 +164,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                             }
                             board[index] = Tile.EMPTY
                             board[newIndex] = tile
+                            if (index != newIndex) moved = true
 
                             for (i in 0..12 step 4) {
                                 newIndex = index + i
@@ -153,6 +172,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                                     val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
                                     board[newIndex] = Tile.EMPTY
                                     board[newIndex + 4] = newTile
+                                    moved = true
                                 }
                             }
                         }
@@ -161,8 +181,12 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             }
         }
 
-        addTile(match)
-        draw(match)
+        if (moved) {
+            addTile(match)
+            draw(match)
+        }
+
+        return moved
     }
 
     override fun begin(match: Match) {
@@ -187,7 +211,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             else -> Direction.RIGHT
         }
 
-        moveTiles(match, direction)
+        if (!moveTiles(match, direction)) {
+            reaction.removeReaction(player.user).queue()
+            return
+        }
+
     }
 
     private fun getData(match: Match) = match.data as Twenty48MatchData
