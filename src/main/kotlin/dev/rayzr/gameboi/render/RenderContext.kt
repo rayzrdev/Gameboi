@@ -4,6 +4,7 @@ import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream
 import dev.rayzr.gameboi.game.Match
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
+import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
@@ -26,13 +27,27 @@ class RenderContext(val match: Match, val width: Int, val height: Int) {
         }
     }
 
-    fun renderCenteredText(text: String, x: Int = width / 2, y: Int = 50, size: Int = 35) {
+    fun renderCenteredText(text: String, x: Int = width / 2, y: Int = 65, size: Int = 40, outlineWidth: Int = 2) {
         graphics.run {
             font = RenderUtils.font.deriveFont(size.toFloat())
 
             val bounds = font.getStringBounds(text, fontRenderContext)
 
-            drawString(text, x - (bounds.width / 2).toInt(), y - (bounds.height / 2).toInt())
+            val realX = x - (bounds.width / 2).toInt()
+            val realY = y - (bounds.height / 2).toInt()
+
+            // Outline effect
+            if (outlineWidth > 0) {
+                color = Color.black
+                drawString(text, realX - outlineWidth, realY - outlineWidth)
+                drawString(text, realX - outlineWidth, realY + outlineWidth)
+                drawString(text, realX + outlineWidth, realY + outlineWidth)
+                drawString(text, realX + outlineWidth, realY - outlineWidth)
+            }
+
+            // Solid middle
+            color = Color.white
+            drawString(text, realX, realY)
         }
     }
 
