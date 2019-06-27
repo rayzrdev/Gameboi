@@ -175,6 +175,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
         if (!emojis.contains(reaction.reactionEmote.name)) return
 
+        if (!match.players.contains(player)) {
+            reaction.removeReaction(player.user).queue()
+            return
+        }
+
         val direction: Direction = when (reaction.reactionEmote.name) {
             "\u2b05" -> Direction.LEFT
             "\u2b06" -> Direction.UP
