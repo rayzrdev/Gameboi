@@ -80,7 +80,8 @@ object Gameboi : EventListener {
             // Shop commands
             ShopCommand,
             BuyCommand,
-            InventoryCommand
+            InventoryCommand,
+            EquipCommand
     )
 
     override fun onEvent(event: GenericEvent) {

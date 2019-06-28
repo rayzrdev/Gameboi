@@ -46,7 +46,7 @@ object BuyCommand : Command("buy", "Lets you buy items from the shop", "buy <ite
             inventory.compute(shopItem) { _, current -> (current ?: 0) + 1 }
 
             // Equip if nothing is purchased yet
-            equipment.putIfAbsent(shopItem.slot, shopItem)
+            equipment.putIfAbsent(shopItem.slot.internalName, shopItem)
 
             event.channel.sendMessage(":white_check_mark: You have purchased **${shopItem.name}**x1.").queue()
         }
@@ -64,6 +64,44 @@ object InventoryCommand : Command("inventory", "Shows you what items you current
             }
 
             event.channel.sendMessage(":moneybag: **Coins:** ${String.format("%,d", it.coins)}\n\n$items").queue()
+        }
+    }
+}
+
+object EquipCommand : Command("equip", "Lets you equip different items", "equip <slot> none|<item>") {
+    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
+        if (args.isEmpty()) {
+            val slots = ShopRegistry.slots.joinToString("\n") { "- ${it.internalName}" }
+            event.channel.sendMessage("**Available slots:**\n$slots").queue()
+            return
+        }
+
+        val slot = ShopRegistry.getSlot(args[0].toLowerCase()) ?: return fail(event, "That is not a valid slot!")
+
+        Player[event.author].editData {
+            if (args.size < 2) {
+                val availableItems = inventory.keys.filter { it.slot == slot }
+
+                if (availableItems.isEmpty()) {
+                    return@editData fail(event, "You don't have any items available for this slot.")
+                } else {
+                    event.channel.sendMessage("**Available items:**\n${availableItems.joinToString("\n") { "- ${it.name}" }}").queue()
+                    return@editData
+                }
+            }
+
+            val itemName = args.subList(1, args.size).joinToString(" ").toLowerCase()
+            if (itemName == "none") {
+                equipment.remove(slot.internalName)
+                event.channel.sendMessage(":white_check_mark: Removed all items from your **${slot.name}** slot.").queue()
+                return@editData
+            }
+
+            val item = inventory.keys.find { it.name.toLowerCase() == itemName }
+                    ?: return@editData fail(event, "That is not a valid item!")
+
+            equipment[slot.internalName] = item
+            event.channel.sendMessage(":white_check_mark: Equipped **${item.name}** to your **${slot.name}** slot.").queue()
         }
     }
 }
