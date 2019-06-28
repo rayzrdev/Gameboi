@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.MessageReaction
 import java.util.*
 import kotlin.concurrent.schedule
 
-class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, val time: Long) {
+class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, val life: Long = 60000) {
     lateinit var message: Message
 
     init {
@@ -18,12 +18,18 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
                         .setThumbnail(from.user.avatarUrl)
                         .setTitle("${from.user.name} has invited you to play ${game.name}!")
                         .setDescription("Press the check mark below to accept!")
+                        .setFooter("This invite will expire in ${life/1000} seconds")
                         .build()
         ).queue {
             it.addReaction("\u2705").queue() // check mark
             it.addReaction("\u274c").queue() // x mark
 
             message = it
+
+            Timer().schedule(life) {
+                InviteManager.remove(to.user)
+                message.delete().queue()
+            }
         }
     }
 

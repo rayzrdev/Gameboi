@@ -40,7 +40,7 @@ object InviteManager {
             return
         }
 
-        this[to.user] = Invite(message.channel, from, to, game, System.currentTimeMillis())
+        this[to.user] = Invite(message.channel, from, to, game)
     }
 
     fun singlePlayer(message: Message, player: Player, game: Game) {
