@@ -1,10 +1,13 @@
 package dev.rayzr.gameboi.game
 
+import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.manager.InviteManager
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.MessageReaction
+import java.util.*
+import kotlin.concurrent.schedule
 
 class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, val time: Long) {
     lateinit var message: Message
@@ -32,6 +35,16 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
 
         when (reaction.reactionEmote.name) {
             "\u2705" -> {
+                // Check *again*
+                if (from.currentMatch != null || to.currentMatch != null) {
+                    message.channel.sendMessage(":x: One of you has already joined another match!").queue {
+                        Timer().schedule(Gameboi.errorLife) {
+                            it.textChannel.deleteMessages(listOf(it, message)).queue()
+                        }
+                    }
+                    return
+                }
+
                 // TODO: More than 2-player game support?
                 val match = Match(game, channel)
 
@@ -39,10 +52,13 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
                 match.addPlayer(to)
             }
             "\u274c" -> {
-                InviteManager.remove(to.user)
+                // Do nothing special
             }
+            else -> return
         }
 
+        // Bye bye invite
+        InviteManager.remove(to.user)
         message.delete().queue()
     }
 }

@@ -30,6 +30,7 @@ object InviteManager {
             }
             return
         }
+
         if (invites.containsKey(to.user)) {
             message.channel.sendMessage(":x: That player has already been invited to a game!").queue {
                 Timer().schedule(Gameboi.errorLife) {
