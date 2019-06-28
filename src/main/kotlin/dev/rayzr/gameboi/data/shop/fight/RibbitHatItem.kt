@@ -5,6 +5,6 @@ import dev.rayzr.gameboi.render.RenderUtils
 object RibbitHatItem : FightHatItem(
         "fight-hat-ribbit",
         "Ribbit Hat",
-        100,
+        150,
         RenderUtils.loadImage("fight/hats/ribbit.png")!!
 )

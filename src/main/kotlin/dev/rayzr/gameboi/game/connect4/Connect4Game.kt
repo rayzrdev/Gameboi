@@ -1,5 +1,7 @@
 package dev.rayzr.gameboi.game.connect4
 
+import dev.rayzr.gameboi.data.shop.connect4.CONNECT_4_DESIGN_SLOT
+import dev.rayzr.gameboi.data.shop.connect4.Connect4DesignItem
 import dev.rayzr.gameboi.game.Game
 import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.MatchData
@@ -32,32 +34,53 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             else -> ":tada: **${winner.user.name}** has won and has earned **${data.coinsWon}** coins!"
         }
 
-        render(match, emojisToRender, message) {
-            clear()
-            graphics.run {
-                setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-                setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+        match.players[0].getData().thenAccept { playerOneData ->
+            match.players[1].getData().thenAccept { playerTwoData ->
+                render(match, emojisToRender, message) {
+                    clear()
+                    graphics.run {
+                        setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+                        setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
 
-                drawImage(boardImage, 0, 0, 700, 600, null)
+                        drawImage(boardImage, 0, 0, 700, 600, null)
+                        scale(10.0, 10.0)
 
-                val offsetX = 120
-                val offsetY = 160
-                val widthX = 60
-                val widthY = 60
-                val gapX = 20
-                val gapY = 10
+                        val offsetX = 12
+                        val offsetY = 16
+                        val widthX = 6
+                        val widthY = 6
+                        val gapX = 2
+                        val gapY = 1
 
-                board.forEachIndexed { index, slot ->
-                    val row = index / 6
-                    val col = index % 6
+                        board.forEachIndexed { index, slot ->
+                            val row = index / 6
+                            val col = index % 6
 
-                    drawImage(slot.image, offsetX + (widthX + gapX) * col, offsetY + (widthY + gapY) * row, widthX, widthY, null)
+                            val realX = offsetX + (widthX + gapX) * col
+                            val realY = offsetY + (widthY + gapY) * row
+
+                            drawImage(slot.image, realX, realY, widthX, widthY, null)
+
+                            val playerData = when (slot) {
+                                Connect4Game.Slot.ONE -> playerOneData
+                                Connect4Game.Slot.TWO -> playerTwoData
+                                else -> null
+                            }
+
+                            // Draw designs if applicable
+//                            println("$playerData - ${playerData?.equipment?.get(CONNECT_4_DESIGN_SLOT.internalName)}")
+                            if (playerData != null && playerData.equipment[CONNECT_4_DESIGN_SLOT.internalName] is Connect4DesignItem) {
+                                val item = playerData.equipment[CONNECT_4_DESIGN_SLOT.internalName] as Connect4DesignItem
+                                drawImage(item.image, realX, realY, null)
+                            }
+                        }
+                    }
+
+                    when {
+                        winner != null -> renderCenteredText("${winner.user.name} wins!")
+                        board.none { it == Slot.EMPTY } -> renderCenteredText("It's a draw!")
+                    }
                 }
-            }
-
-            when {
-                winner != null -> renderCenteredText("${winner.user.name} wins!")
-                board.none { it == Slot.EMPTY } -> renderCenteredText("It's a draw!")
             }
         }
     }
