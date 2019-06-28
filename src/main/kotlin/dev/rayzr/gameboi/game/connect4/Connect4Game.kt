@@ -26,12 +26,10 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             else -> emojis
         }
 
-        val message = if (board.none { it == Slot.EMPTY }) {
-            ":handshake: ${match.players.joinToString(" and ") { "**${it.user.name}**" }} have drawn!"
-        } else if (winner == null) {
-            ":thinking: **${match.players[data.currentPlayer].user.name}**'s turn!"
-        } else {
-            ":tada: **${winner.user.name}** has won and has earned **${data.coinsWon}** coins!"
+        val message = when {
+            board.none { it == Slot.EMPTY } -> ":handshake: ${match.players.joinToString(" and ") { "**${it.user.name}**" }} have drawn!"
+            winner == null -> ":thinking: **${match.players[data.currentPlayer].user.name}**'s turn!"
+            else -> ":tada: **${winner.user.name}** has won and has earned **${data.coinsWon}** coins!"
         }
 
         render(match, emojisToRender, message) {
