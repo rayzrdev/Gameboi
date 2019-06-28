@@ -139,7 +139,7 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                         coins += coinsEarned
                     }
 
-                    draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations, you have earned **${coinsEarned}** coins!")
+                    draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations, you have earned **$coinsEarned** coins!")
                     match.end()
                 } else {
                     draw(match, ":white_check_mark: You tried **$displayLetter** and you guessed correctly!")

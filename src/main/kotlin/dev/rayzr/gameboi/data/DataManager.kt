@@ -62,7 +62,7 @@ object DataManager {
                 .forEach { (id, data) -> playerDataCache[id] = data }
     }
 
-    fun save() {
+    private fun save() {
         file.delete()
         file.writeText(
                 yaml.dumpAsMap(

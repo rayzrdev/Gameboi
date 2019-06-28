@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
-class RenderContext(val match: Match, val width: Int, val height: Int) {
+class RenderContext(val match: Match, private val width: Int, private val height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() = image.createGraphics()
@@ -70,7 +70,7 @@ class RenderContext(val match: Match, val width: Int, val height: Int) {
         }
     }
 
-    fun toBytes(): ByteArray {
+    private fun toBytes(): ByteArray {
         val outputStream = ByteArrayOutputStream()
 
         ImageIO.write(image, "png", outputStream)

@@ -1,5 +1,7 @@
 package dev.rayzr.gameboi.game.hangman
 
+// Credits: https://www.hangmanwords.com/words
+// Some words have been modified / a few spelling mistakes corrected
 val HANGMAN_WORDS = listOf(
         "abruptly",
         "absurd",
@@ -45,7 +47,6 @@ val HANGMAN_WORDS = listOf(
         "embezzle",
         "equip",
         "espionage",
-        "euouae",
         "exodus",
         "faking",
         "fishhook",
@@ -64,7 +65,7 @@ val HANGMAN_WORDS = listOf(
         "galaxy",
         "galvanize",
         "gazebo",
-        "giaour",
+        "glamour",
         "gizmo",
         "glowworm",
         "glyph",
@@ -89,7 +90,7 @@ val HANGMAN_WORDS = listOf(
         "jelly",
         "jigsaw",
         "jinx",
-        "jiujitsu",
+        "jujitsu",
         "jockey",
         "jogging",
         "joking",
@@ -122,7 +123,7 @@ val HANGMAN_WORDS = listOf(
         "naphtha",
         "nightclub",
         "nowadays",
-        "numbskull",
+        "numskull",
         "nymph",
         "onyx",
         "ovary",
@@ -172,7 +173,7 @@ val HANGMAN_WORDS = listOf(
         "transcript",
         "transgress",
         "transplant",
-        "triphthong",
+        "triathlon",
         "twelfth",
         "twelfths",
         "unknown",

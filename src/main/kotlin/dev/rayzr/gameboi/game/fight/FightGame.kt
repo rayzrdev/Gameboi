@@ -22,7 +22,7 @@ object Images {
 }
 
 object FightGame : Game(800, 600, "Fight", 2) {
-    val attacks = listOf(
+    private val attacks = listOf(
             Attack(
                     name = "punch",
                     emoji = "\ud83e\udd1c", // right fist
@@ -72,7 +72,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
             emptyList()
         }
 
-        val messsage = if (data.winner == null) {
+        val message = if (data.winner == null) {
             var output = ":thinking: **${data.currentPlayer.player.user.name}**'s turn!"
 
             when (data.lastHitResult) {
@@ -88,7 +88,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
         data.playerOne.player.getData().thenAccept { playerOneData ->
             data.playerTwo.player.getData().thenAccept { playerTwoData ->
-                render(match, emojisToRender, messsage) {
+                render(match, emojisToRender, message) {
                     graphics.run {
                         scale(10.0, 10.0)
 

@@ -18,7 +18,7 @@ Here is a work-in-progress screenshot of the *Connect 4* game being played by tw
 
 ## Invite
 
-There is currently no invite publically available for Gameboi, but one will be posted as soon as Discord Hack Week is over and the bot is on stable hosting!
+There is currently no invite publicly available for Gameboi, but one will be posted as soon as Discord Hack Week is over and the bot is on stable hosting!
 
 ## Download
 

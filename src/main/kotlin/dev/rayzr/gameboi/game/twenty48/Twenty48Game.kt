@@ -27,7 +27,7 @@ object Images {
 }
 
 object Twenty48Game : Game(600, 600, "2048", 1) {
-    val emojis = listOf("\u2b05", "\u2b06", "\u2b07", "\u27a1")
+    private val emojis = listOf("\u2b05", "\u2b06", "\u2b07", "\u27a1")
 
     private fun draw(match: Match) {
         val data = getData(match)

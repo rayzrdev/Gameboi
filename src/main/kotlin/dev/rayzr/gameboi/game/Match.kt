@@ -8,7 +8,7 @@ class Match(val game: Game, val channel: MessageChannel) {
     val renderContext = game.createRenderContext(this)
     var data: MatchData? = null
 
-    fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
+    private fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
 
     fun addPlayer(player: Player) {
         if (!canJoin(player)) {
@@ -24,7 +24,7 @@ class Match(val game: Game, val channel: MessageChannel) {
         }
     }
 
-    fun begin() {
+    private fun begin() {
         data = game.createData(this)
         game.begin(this)
         players.forEach {
