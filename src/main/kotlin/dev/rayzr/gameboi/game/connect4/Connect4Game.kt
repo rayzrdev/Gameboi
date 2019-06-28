@@ -21,13 +21,14 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
         val winner = data.winner
         val board = data.board
 
-        val emojisToRender = if (winner == null) {
-            emojis
-        } else {
-            emptyList()
+        val emojisToRender = when {
+            winner != null || board.none { it == Slot.EMPTY } -> emptyList()
+            else -> emojis
         }
 
-        val message = if (winner == null) {
+        val message = if (board.none { it == Slot.EMPTY }) {
+            ":handshake: ${match.players.joinToString(" and ") { "**${it.user.name}**" }} have drawn!"
+        } else if (winner == null) {
             ":thinking: **${match.players[data.currentPlayer].user.name}**'s turn!"
         } else {
             ":tada: **${winner.user.name}** has won and has earned **${data.coinsWon}** coins!"
@@ -38,9 +39,6 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             graphics.run {
                 setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
                 setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
-
-//                color = Color.BLUE
-//                fillRect(45, 60, 410, 340)
 
                 drawImage(boardImage, 0, 0, 700, 600, null)
 
@@ -61,6 +59,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
 
             when {
                 winner != null -> renderCenteredText("${winner.user.name} wins!")
+                board.none { it == Slot.EMPTY } -> renderCenteredText("It's a draw!")
             }
         }
     }
