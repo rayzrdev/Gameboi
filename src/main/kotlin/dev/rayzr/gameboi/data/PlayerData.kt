@@ -1,10 +1,19 @@
 package dev.rayzr.gameboi.data
 
-data class PlayerData(var coins: Int, val stats: MutableMap<String, Int>) {
+import dev.rayzr.gameboi.data.shop.ShopItem
+
+data class PlayerData(
+        var coins: Int = 0,
+        val stats: MutableMap<String, Int> = mutableMapOf(),
+        val inventory: MutableMap<ShopItem, Int> = mutableMapOf(),
+        val equipment: MutableMap<String, ShopItem> = mutableMapOf()
+) {
     fun toMap(): Map<String, Any> {
         return mapOf(
                 "coins" to coins,
-                "stats" to stats
+                "stats" to stats,
+                "inventory" to inventory.mapKeys { it.key.internalName },
+                "equipment" to equipment.mapValues { it.value.internalName }
         )
     }
 

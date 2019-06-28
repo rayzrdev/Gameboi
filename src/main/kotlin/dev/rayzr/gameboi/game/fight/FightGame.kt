@@ -1,5 +1,7 @@
 package dev.rayzr.gameboi.game.fight
 
+import dev.rayzr.gameboi.data.PlayerData
+import dev.rayzr.gameboi.data.shop.fight.FightHatItem
 import dev.rayzr.gameboi.game.Game
 import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.MatchData
@@ -84,48 +86,61 @@ object FightGame : Game(800, 600, "Fight", 2) {
             ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**!\n\n:tada: **${data.winner!!.player.user.name}** has won!"
         }
 
-        render(match, emojisToRender, messsage) {
-            graphics.run {
-                scale(10.0, 10.0)
+        data.playerOne.player.getData().thenAccept { playerOneData ->
+            data.playerTwo.player.getData().thenAccept { playerTwoData ->
+                render(match, emojisToRender, messsage) {
+                    graphics.run {
+                        scale(10.0, 10.0)
 
-                // Background
-                drawImage(Images.background, 0, 0, null)
+                        // Background
+                        drawImage(Images.background, 0, 0, null)
 
-                if (data.winner != null) {
-                    this@render.renderCenteredText("${data.winner?.player?.user?.name} wins!")
+                        if (data.winner != null) {
+                            this@render.renderCenteredText("${data.winner?.player?.user?.name} wins!")
 
-                    // Only draw winning player
-                    drawPlayer(this, data.winner!!)
-                } else {
-                    // Players
-                    drawPlayer(this, data.playerOne)
-                    drawPlayer(this, data.playerTwo)
+                            // Only draw winning player
+                            drawPlayer(this, data.winner!!, playerOneData)
+                        } else {
+                            // Players
+                            drawPlayer(this, data.playerOne, playerOneData)
+                            drawPlayer(this, data.playerTwo, playerTwoData)
 
-                    if (data.lastHitResult != HitResult.NONE) {
-                        val textImage = when (data.lastHitResult) {
-                            HitResult.HIT -> Images.textHit
-                            else -> Images.textMiss
+
+
+                            if (data.lastHitResult != HitResult.NONE) {
+                                val textImage = when (data.lastHitResult) {
+                                    HitResult.HIT -> Images.textHit
+                                    else -> Images.textMiss
+                                }
+
+                                drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 17, null)
+                            }
                         }
-
-                        drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 13, null)
                     }
                 }
             }
         }
     }
 
-    private fun drawPlayer(graphics: Graphics2D, player: FightPlayer) {
+    private fun drawPlayer(graphics: Graphics2D, player: FightPlayer, data: PlayerData) {
         graphics.drawImage(player.skin, player.offset.x, player.offset.y, null)
 
         // HP Bar
-        graphics.drawImage(Images.hpBorder, player.offset.x, player.offset.y - 6, null)
-        graphics.drawImage(Images.hpBackground, player.offset.x, player.offset.y - 6, null)
+        graphics.drawImage(Images.hpBorder, player.offset.x, player.offset.y - 10, null)
+        graphics.drawImage(Images.hpBackground, player.offset.x, player.offset.y - 10, null)
 
         val hpWidth = ceil((player.health / 100.0) * Images.hpFiller.width).toInt()
 
         graphics.setClip(player.offset.x, 0, hpWidth, 800)
-        graphics.drawImage(Images.hpFiller, player.offset.x, player.offset.y - 6, null)
+        graphics.drawImage(Images.hpFiller, player.offset.x, player.offset.y - 10, null)
         graphics.clip = null
+
+        // Hat!!!
+        if (data.equipment["fight-hat"] is FightHatItem) {
+            val hat = data.equipment["fight-hat"] as FightHatItem
+
+            graphics.drawImage(hat.image, player.offset.x + 6, player.offset.y - 4, null)
+        }
     }
 
     private fun getData(match: Match): FightMatchData = match.data as FightMatchData

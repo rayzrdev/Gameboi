@@ -2,6 +2,7 @@ package dev.rayzr.gameboi
 
 import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.data.DataManager
+import dev.rayzr.gameboi.data.shop.initShopItems
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.MessageListener
 import dev.rayzr.gameboi.listener.ReactionListener
@@ -10,7 +11,6 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
-import org.omg.CORBA.Object
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.FileInputStream
@@ -18,6 +18,8 @@ import java.nio.file.Files
 import kotlin.system.exitProcess
 
 fun main() {
+    initShopItems()
+
     Gameboi.load()
 
     // Init JDA
@@ -44,7 +46,7 @@ object Gameboi : EventListener {
             exitProcess(1)
         }
 
-        val output = yaml.load(FileInputStream(configFile)) as Map<String, Object>
+        val output = yaml.load(FileInputStream(configFile)) as Map<String, Any>
         prefix = output["prefix"].toString()
         token = output["token"].toString()
         errorLife = if (output["error-life"] == null) 15000 else output["error-life"].toString().toLong()
@@ -62,7 +64,11 @@ object Gameboi : EventListener {
             Twenty48Invite,
             HangmanInvite,
             // Match commands
-            QuitCommand
+            QuitCommand,
+            // Shop commands
+            ShopCommand,
+            BuyCommand,
+            InventoryCommand
     )
 
     override fun onEvent(event: GenericEvent) {
