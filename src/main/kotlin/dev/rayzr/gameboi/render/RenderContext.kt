@@ -68,6 +68,8 @@ class RenderContext(val match: Match, private val width: Int, private val height
             lastMessage = it
             callback.invoke(it)
         }
+
+        match.bumpTimeout()
     }
 
     private fun toBytes(): ByteArray {

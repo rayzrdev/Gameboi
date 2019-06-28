@@ -22,6 +22,7 @@ object ReactionListener : EventListener {
 
             if (match != null) {
                 match.game.handleReaction(player, match, event.reaction)
+                match.bumpTimeout()
                 return
             }
 

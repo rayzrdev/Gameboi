@@ -2,8 +2,16 @@ package dev.rayzr.gameboi.game
 
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.entities.MessageChannel
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.schedule
+
+val MATCH_TIMEOUT = TimeUnit.MINUTES.toMillis(10)
 
 class Match(val game: Game, val channel: MessageChannel) {
+    val timer = Timer()
+    var timeout: TimerTask? = null
+
     val players = mutableListOf<Player>()
     val renderContext = game.createRenderContext(this)
     var data: MatchData? = null
@@ -33,12 +41,23 @@ class Match(val game: Game, val channel: MessageChannel) {
                 updateStatBy("games-played.total", 1)
             }
         }
+
+        // Start timer
+        bumpTimeout()
     }
 
     fun end() {
         players.forEach {
             MatchManager.remove(it.user)
             it.currentMatch = null
+        }
+    }
+
+    fun bumpTimeout() {
+        timeout?.cancel()
+        timeout = timer.schedule(MATCH_TIMEOUT) {
+            channel.sendMessage(":x: Your match has timed out!").queue()
+            end()
         }
     }
 }
