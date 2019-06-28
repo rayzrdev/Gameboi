@@ -6,7 +6,7 @@ import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 
-object HelpCommand : Command("help", "Shows you help for Gameboi", "help [command]") {
+object HelpCommand : Command("help", "Shows you help for Gameboi") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val embed = EmbedBuilder().run {
             setDescription(Gameboi.commands.joinToString("\n\n") { "**${it.usage}** - ${it.description}" })

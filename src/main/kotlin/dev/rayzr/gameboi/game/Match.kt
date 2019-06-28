@@ -51,6 +51,8 @@ class Match(val game: Game, val channel: MessageChannel) {
             MatchManager.remove(it.user)
             it.currentMatch = null
         }
+
+        timeout?.cancel()
     }
 
     fun bumpTimeout() {

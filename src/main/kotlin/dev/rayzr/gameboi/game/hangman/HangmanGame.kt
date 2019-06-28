@@ -83,7 +83,6 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
 
     override fun begin(match: Match) {
         draw(match, ":thinking: Type a letter in chat to guess it!")
-        println("New match word: ${getData(match).word}")
     }
 
     override fun handleMessage(player: Player, match: Match, message: Message) {
