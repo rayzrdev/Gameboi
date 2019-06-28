@@ -7,7 +7,10 @@ import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.MessageListener
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
+import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.OnlineStatus
+import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -15,6 +18,8 @@ import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 import kotlin.system.exitProcess
 
 fun main() {
@@ -22,13 +27,16 @@ fun main() {
 
     Gameboi.load()
 
-    // Init JDA
-    JDABuilder(Gameboi.token)
-            .addEventListeners(Gameboi, ReactionListener, MessageListener)
-            .build()
-
     // TODO: Temporary, only while we're using flat files
     DataManager.load()
+
+    // Init JDA
+    val jda = JDABuilder(Gameboi.token)
+            .addEventListeners(Gameboi, ReactionListener, MessageListener)
+            .build()
+            .awaitReady()
+
+    Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence(jda) }
 }
 
 object Gameboi : EventListener {
@@ -52,7 +60,7 @@ object Gameboi : EventListener {
         errorLife = if (output["error-life"] == null) 15000 else output["error-life"].toString().toLong()
     }
 
-    private val commands: List<Command> = listOf(
+    val commands: List<Command> = listOf(
             // Info
             HelpCommand,
             PingCommand,
@@ -88,5 +96,11 @@ object Gameboi : EventListener {
                 MatchManager[event.author]?.run { game.handleMessage(Player[event.author], this, event.message) }
             }
         }
+    }
+
+    fun updatePresence(jda: JDA) {
+        jda.presence.setPresence(OnlineStatus.ONLINE, Activity.watching(
+                "over ${jda.guilds.size} guilds | ${prefix}help"
+        ))
     }
 }
