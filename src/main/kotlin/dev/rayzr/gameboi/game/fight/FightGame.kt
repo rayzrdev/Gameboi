@@ -160,7 +160,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
             }
             data.otherPlayer.player.editData { updateStatBy("fight.damage-taken", damage) }
 
-            if (data.otherPlayer.health < 0) {
+            if (data.otherPlayer.health <= 0) {
                 data.otherPlayer.health = 0
                 data.winner = data.currentPlayer
 
