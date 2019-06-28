@@ -23,12 +23,14 @@ object DataManager {
 
         val raw = Gameboi.yaml.load(FileInputStream(file)) as Map<Long, Any>
 
+        playerDataCache.clear()
+
         raw.mapKeys { it.key }
                 .mapValues {
                     try {
                         val section = it.value as Map<String, Any>
 
-                        PlayerData(
+                        return@mapValues PlayerData(
                                 // Coins
                                 section.getOrDefault("coins", 0) as Int,
 
@@ -52,8 +54,12 @@ object DataManager {
                     } catch (e: Exception) {
                         println("Failed to load player data for player with ID '${it.key}'")
                         e.printStackTrace()
+                        return@mapValues null
                     }
                 }
+                .filterValues { it != null }
+                .mapValues { it.value!! }
+                .forEach { (id, data) -> playerDataCache[id] = data }
     }
 
     fun save() {
