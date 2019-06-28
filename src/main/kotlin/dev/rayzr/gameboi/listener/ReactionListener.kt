@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.EventListener
 
 object ReactionListener : EventListener {
-
-
     override fun onEvent(event: GenericEvent) {
         if (event is GuildMessageReactionAddEvent) {
             if (event.user.isBot) return
@@ -26,10 +24,7 @@ object ReactionListener : EventListener {
                 return
             }
 
-            val invite = InviteManager.currentInvites.find { it.message.id == msg.id }
-
             InviteManager.currentInvites.find { it.message.id == msg.id }?.handleReaction(event.reaction, msg, player)
         }
     }
-
 }
