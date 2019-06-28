@@ -33,13 +33,15 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         val data = getData(match)
         val board = data.board
 
+        val coinsWon = (25..35).random()
+
         val emojisToRender = when {
             board.any { it == Tile.TWOZEROFOUREIGHT } || board.none { it == Tile.EMPTY } -> emptyList()
             else -> emojis
         }
 
         val message = when {
-            board.any { it == Tile.TWOZEROFOUREIGHT } -> ":tada: **${match.players[0].user.name}** has won!"
+            board.any { it == Tile.TWOZEROFOUREIGHT } -> ":tada: **${match.players[0].user.name}** has won and has earned **$coinsWon** coins!"
             board.none { it == Tile.EMPTY } -> ":thumbsdown: **${match.players[0].user.name}** has lost!"
             else -> ":thinking: **${match.players[0].user.name}** is playing 2048!"
         }
@@ -64,7 +66,10 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             when {
                 board.any { it == Tile.TWOZEROFOUREIGHT } -> {
                     renderCenteredText("You won!")
-                    match.players[0].editData { updateStatBy("2048.wins", 1) }
+                    match.players[0].editData {
+                        updateStatBy("2048.wins", 1)
+                        coins += coinsWon
+                    }
                     match.end()
                 }
                 board.none { it == Tile.EMPTY } -> {

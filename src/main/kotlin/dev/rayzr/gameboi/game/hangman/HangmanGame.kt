@@ -132,9 +132,14 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
 
                 // All blanks filled
                 if (!data.blankedWord.contains(" ")) {
-                    player.editData { updateStatBy("hangman.wins", 1) }
+                    val coinsEarned = (5..10).random() + (5 - data.currentStage) * 5
 
-                    draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations!")
+                    player.editData {
+                        updateStatBy("hangman.wins", 1)
+                        coins += coinsEarned
+                    }
+
+                    draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations, you have earned **${coinsEarned}** coins!")
                     match.end()
                 } else {
                     draw(match, ":white_check_mark: You tried **$displayLetter** and you guessed correctly!")

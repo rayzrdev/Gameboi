@@ -83,7 +83,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
             output
         } else {
-            ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**!\n\n:tada: **${data.winner!!.player.user.name}** has won!"
+            ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**!\n\n:tada: **${data.winner!!.player.user.name}** has won and has earned **${data.coinsWon}** coins!"
         }
 
         data.playerOne.player.getData().thenAccept { playerOneData ->
@@ -179,7 +179,11 @@ object FightGame : Game(800, 600, "Fight", 2) {
                 data.otherPlayer.health = 0
                 data.winner = data.currentPlayer
 
-                player.editData { updateStatBy("fight.wins", 1) }
+                data.coinsWon = (20..30).random()
+                player.editData {
+                    updateStatBy("fight.wins", 1)
+                    coins += data.coinsWon
+                }
                 match.end()
             }
         } else {

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 object ShopCommand : Command("shop", "Lets you see what is available for purchase in the shop") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val items = ShopRegistry.items.joinToString("\n\n") {
-            "**${it.name}** (${it.cost} coins)"
+            "[__${it.slot.name}__] **${it.name}** (${it.cost} coins)"
         }
 
         event.channel.sendMessage(":information_source: **Available items:**\n\n$items").queue()
@@ -58,8 +58,8 @@ object InventoryCommand : Command("inventory", "Shows you what items you current
         Player[event.author].getData().thenAccept {
             val items = when {
                 it.inventory.isEmpty() -> "**You have no items.**"
-                else -> "**Your items:**\n\n${
-                it.inventory.map { item -> "**${item.key.name}**x${item.value}" }.joinToString("\n")
+                else -> "**Your items:**\n${
+                it.inventory.map { item -> "- **${item.key.name}**x${item.value}" }.joinToString("\n")
                 }"
             }
 

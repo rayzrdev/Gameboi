@@ -17,6 +17,7 @@ class FightMatchData(playerOne: Player, playerTwo: Player) : MatchData {
     val playerTwo = FightPlayer(playerTwo, defaultRightSkin, rightOffset)
     var currentPlayerIndex = 0
     var winner: FightPlayer? = null
+    var coinsWon: Int = 0
     var lastAttack: Hit? = null
     var lastHitResult: HitResult = HitResult.NONE
 

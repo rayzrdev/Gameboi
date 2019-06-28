@@ -30,7 +30,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
         val message = if (winner == null) {
             ":thinking: **${match.players[data.currentPlayer].user.name}**'s turn!"
         } else {
-            ":tada: **${winner.user.name}** has won!"
+            ":tada: **${winner.user.name}** has won and has earned **${data.coinsWon}** coins!"
         }
 
         render(match, emojisToRender, message) {
@@ -117,6 +117,11 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
 
         if (checkForWins(slotType, row, col, board)) {
             data.winner = player
+            data.coinsWon = (15..25).random()
+            player.editData {
+                updateStatBy("connect4.wins", 1)
+                coins += data.coinsWon
+            }
             match.end()
         }
 
@@ -183,5 +188,6 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
         val board = Array(36) { Slot.EMPTY }
         var currentPlayer = 0
         var winner: Player? = null
+        var coinsWon: Int = 0
     }
 }
