@@ -36,13 +36,13 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         val coinsWon = (25..35).random()
 
         val emojisToRender = when {
-            board.any { it == Tile.TWOZEROFOUREIGHT } || board.none { it == Tile.EMPTY } -> emptyList()
+            board.any { it == Tile.TWOZEROFOUREIGHT } || !canPlay(match) -> emptyList()
             else -> emojis
         }
 
         val message = when {
             board.any { it == Tile.TWOZEROFOUREIGHT } -> ":tada: **${match.players[0].user.name}** has won and has earned **$coinsWon** coins!"
-            board.none { it == Tile.EMPTY } -> ":thumbsdown: **${match.players[0].user.name}** has lost!"
+            !canPlay(match) -> ":thumbsdown: **${match.players[0].user.name}** has lost!"
             else -> ":thinking: **${match.players[0].user.name}** is playing 2048!"
         }
 
@@ -72,8 +72,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                     }
                     match.end()
                 }
-                board.none { it == Tile.EMPTY } -> {
-                    // TODO: Doesn't check for adjacent moves?
+                !canPlay(match) -> {
                     renderCenteredText("You lost!")
                     match.end()
                 }
@@ -95,6 +94,118 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         val data = getData(match)
         val board = data.board
 
+        val moved = canMove(match, direction)
+
+        if (!moved) return moved
+
+        when (direction) {
+            Direction.LEFT, Direction.UP -> {
+                board.forEachIndexed { index, tile ->
+                    if (tile != Tile.EMPTY) {
+                        if (direction == Direction.LEFT) {
+                            val row = (index / 4) * 4
+                            val col = index % 4
+                            var newIndex = index
+
+                            for (i in 0..col) {
+                                if (index - i >= row && board[index - i] == Tile.EMPTY) newIndex = index - i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            for (i in 0..col) {
+                                newIndex = index - i
+                                if (newIndex - 1 >= row && board[newIndex] == board[newIndex - 1]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex - 1] = newTile
+                                }
+                            }
+                        } else {
+                            var newIndex = index
+
+                            for (i in 0..12 step 4) {
+                                if (index - i >= 0 && board[index - i] == Tile.EMPTY) newIndex = index - i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            for (i in 0..12 step 4) {
+                                newIndex = index - i
+                                if (newIndex - 4 >= 0 && board[newIndex] == board[newIndex - 4]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex - 4] = newTile
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Direction.DOWN, Direction.RIGHT -> {
+                for (index in board.size - 1 downTo 0) {
+                    val tile = board[index]
+                    if (tile != Tile.EMPTY) {
+                        if (direction == Direction.RIGHT) {
+                            val row = (index / 4) * 4 + 3
+                            var newIndex = index
+
+                            for (i in 0..3) {
+                                if (index + i <= row && board[index + i] == Tile.EMPTY) newIndex = index + i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            for (i in 0..3) {
+                                newIndex = index + i
+                                if (newIndex + 1 <= row && board[newIndex] == board[newIndex + 1]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex + 1] = newTile
+                                }
+                            }
+                        } else {
+                            var newIndex = index
+
+                            for (i in 0..12 step 4) {
+                                if (index + i <= 15 && board[index + i] == Tile.EMPTY) newIndex = index + i
+                            }
+                            board[index] = Tile.EMPTY
+                            board[newIndex] = tile
+
+                            for (i in 0..12 step 4) {
+                                newIndex = index + i
+                                if (newIndex + 4 <= 15 && board[newIndex] == board[newIndex + 4]) {
+                                    val newTile = Tile.values().find { it.value == board[newIndex].value * 2 }!!
+                                    board[newIndex] = Tile.EMPTY
+                                    board[newIndex + 4] = newTile
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (moved) {
+            val score = board.sumBy { it.value }
+
+            match.players[0].editData {
+                updateStatBy("2048.total-moves", 1)
+                if (getStat("2048.highest-score") < score) {
+                    setStat("2048.highest-score", score)
+                }
+            }
+
+            addTile(match)
+            draw(match)
+        }
+
+        return moved
+    }
+
+    private fun canMove(match: Match, direction: Direction): Boolean {
+        val board = getData(match).board.clone()
         var moved = false
 
         when (direction) {
@@ -193,22 +304,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                 }
             }
         }
-
-        if (moved) {
-            val score = board.sumBy { it.value }
-
-            match.players[0].editData {
-                updateStatBy("2048.total-moves", 1)
-                if (getStat("2048.highest-score") < score) {
-                    setStat("2048.highest-score", score)
-                }
-            }
-
-            addTile(match)
-            draw(match)
-        }
-
         return moved
+    }
+
+    private fun canPlay(match: Match): Boolean {
+        return Direction.values().any { canMove(match, it) }
     }
 
     override fun begin(match: Match) {
