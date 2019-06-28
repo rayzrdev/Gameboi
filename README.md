@@ -35,6 +35,7 @@ A `config.yml` file will be generated in the working directory the first time yo
 Command | Description
 ------- | -----------
 `help` | Shows you help for Gameboi
+`invite` | Gives you an invite link for Gameboi
 `ping` | Shows you the bot's ping
 `stats [game]` | Shows your game stats
 `connect4 <other>` | Invites a player to play Connect4 with you!

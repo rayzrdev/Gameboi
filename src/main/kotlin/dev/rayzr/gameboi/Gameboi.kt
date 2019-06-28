@@ -67,6 +67,7 @@ object Gameboi : EventListener {
     val commands: List<Command> = listOf(
             // Info
             HelpCommand,
+            InviteCommand,
             PingCommand,
             StatsCommand,
             // Invites

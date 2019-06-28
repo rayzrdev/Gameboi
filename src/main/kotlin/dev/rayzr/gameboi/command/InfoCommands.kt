@@ -4,6 +4,7 @@ import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.data.PlayerData
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 
 object HelpCommand : Command("help", "Shows you help for Gameboi") {
@@ -11,6 +12,21 @@ object HelpCommand : Command("help", "Shows you help for Gameboi") {
         val embed = EmbedBuilder().run {
             setDescription(Gameboi.commands.joinToString("\n\n") { "**${it.usage}** - ${it.description}" })
             setAuthor("Gameboi Help Commands", "https://github.com/RayzrDev/Gameboi", event.jda.selfUser.effectiveAvatarUrl)
+            setColor(0x353940)
+            build()
+        }
+        event.channel.sendMessage(embed).queue()
+    }
+}
+
+object InviteCommand : Command("invite", "Gives you an invite link for Gameboi") {
+    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
+        val embed = EmbedBuilder().run {
+            setTitle("Ready to level up your server with some fun?")
+            setDescription(":tada: Click [here](${event.jda.getInviteUrl(Permission.MESSAGE_MANAGE)}) to add **Gameboi** to your server!")
+//            setThumbnail(event.jda.selfUser.avatarUrl)
+            setImage("https://raw.githubusercontent.com/RayzrDev/Gameboi/master/res/banner.png")
+
             setColor(0x353940)
             build()
         }
