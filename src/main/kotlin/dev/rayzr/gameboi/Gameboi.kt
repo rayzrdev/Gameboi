@@ -68,6 +68,7 @@ object Gameboi : EventListener {
             // Info
             HelpCommand,
             PingCommand,
+            StatsCommand,
             // Invites
             // Multiplayer
             Connect4Invite,
