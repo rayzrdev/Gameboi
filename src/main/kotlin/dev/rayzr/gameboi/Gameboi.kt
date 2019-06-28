@@ -10,6 +10,7 @@ import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -35,6 +36,9 @@ fun main() {
             .addEventListeners(Gameboi, ReactionListener, MessageListener)
             .build()
             .awaitReady()
+
+    // Generate invite
+    println(jda.getInviteUrl(Permission.MESSAGE_MANAGE))
 
     Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence(jda) }
 }
