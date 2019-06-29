@@ -105,15 +105,13 @@ object FightGame : Game(800, 600, "Fight", 2) {
                             drawPlayer(this, data.playerOne, playerOneData)
                             drawPlayer(this, data.playerTwo, playerTwoData)
 
-
-
                             if (data.lastHitResult != HitResult.NONE) {
                                 val textImage = when (data.lastHitResult) {
                                     HitResult.HIT -> Images.textHit
                                     else -> Images.textMiss
                                 }
 
-                                drawImage(textImage, data.otherPlayer.offset.x, data.otherPlayer.offset.y - 17, null)
+                                drawImage(textImage, data.currentPlayer.offset.x, data.currentPlayer.offset.y - 17, null)
                             }
                         }
                     }
