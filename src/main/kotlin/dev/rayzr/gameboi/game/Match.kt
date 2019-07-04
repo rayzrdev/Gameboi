@@ -58,7 +58,7 @@ class Match(val game: Game, val channel: MessageChannel) {
     fun bumpTimeout() {
         timeout?.cancel()
         timeout = timer.schedule(MATCH_TIMEOUT) {
-            channel.sendMessage(":x: Your match has timed out!").queue()
+            channel.sendMessage(":x: Your **${game.name}** match has timed out, ${players.joinToString(" ") { it.user.asMention }}!").queue()
             end()
         }
     }
