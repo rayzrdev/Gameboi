@@ -6,7 +6,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.schedule
 
-val MATCH_TIMEOUT = TimeUnit.MINUTES.toMillis(10)
+val MATCH_TIMEOUT = TimeUnit.MINUTES.toMillis(15)
 
 class Match(val game: Game, val channel: MessageChannel) {
     val timer = Timer()
