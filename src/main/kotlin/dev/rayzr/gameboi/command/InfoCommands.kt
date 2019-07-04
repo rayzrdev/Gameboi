@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 object HelpCommand : Command("help", "Shows you help for Gameboi") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val embed = EmbedBuilder().run {
-            setDescription(Gameboi.commands.joinToString("\n\n") { "**${it.usage}** - ${it.description}" })
+            setDescription(Gameboi.commands.joinToString("\n\n") { "**${Gameboi.prefix}${it.usage}** - ${it.description}" })
             setAuthor("Gameboi Help Commands", "https://github.com/RayzrDev/Gameboi", event.jda.selfUser.effectiveAvatarUrl)
             setColor(0x353940)
             build()
