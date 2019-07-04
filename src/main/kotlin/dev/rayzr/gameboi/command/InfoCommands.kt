@@ -34,13 +34,43 @@ object InviteCommand : Command("invite", "Gives you an invite link for Gameboi")
     }
 }
 
+object AboutCommand : Command("about", "Shows you more information about Gameboi") {
+    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
+        val embed = EmbedBuilder().run {
+            setTitle("What is Gameboi?")
+
+            setDescription("""
+                **Gameboi** is a simple Discord bot made for Discord Hack Week 2019 with a plethora of small games you can play, a charming and nostalgic pixel art style, and a global currency and rewards system!
+                
+                With **2 multiplayer** games (Fight & Connect 4) and **2 singleplayer** games (Hangman & 2048), Gameboi is sure to liven up any server, and the charm of its retro pixel-art graphics feels right at home to any old-school gamer.
+                
+                :tada: Click [here](${event.jda.getInviteUrl(Permission.MESSAGE_MANAGE)}) to add **Gameboi** to your server!
+                :link: Click [here](https://github.com/RayzrDev/Gameboi) to check out the source code for **Gameboi**!
+                :heart: Click [here](https://patreon.com/Rayzr522) if you want to support **Gameboi** and its creators!
+            """.trimIndent())
+
+            addField("Servers", event.jda.guilds.size.toString(), true)
+            addField("Users", event.jda.users.size.toString(), true)
+            setFooter("Created by Rayzr522#9429 and zaeem#3333")
+
+            setImage("https://raw.githubusercontent.com/RayzrDev/Gameboi/master/res/banner.png")
+
+            setColor(0x353940)
+            build()
+        }
+        event.channel.sendMessage(embed).queue()
+    }
+}
+
 object PingCommand : Command("ping", "Shows you the bot's ping") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         event.channel.sendMessage(":stopwatch: Pong! `${event.jda.gatewayPing}ms`").queue()
     }
+
 }
 
 object StatsCommand : Command("stats", "Shows your game stats", "stats [game]") {
+
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         Player[event.author].getData().thenAccept { data ->
             val embed = EmbedBuilder().run {
@@ -101,4 +131,5 @@ object StatsCommand : Command("stats", "Shows your game stats", "stats [game]") 
     private fun addStat(embed: EmbedBuilder, data: PlayerData, name: String, stat: String) {
         embed.addField(name, String.format("%,d", data.getStat(stat)), true)
     }
+
 }

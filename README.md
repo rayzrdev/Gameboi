@@ -36,6 +36,7 @@ Command | Description
 ------- | -----------
 `help` | Shows you help for Gameboi
 `invite` | Gives you an invite link for Gameboi
+`about` | Shows you information about Gameboi
 `ping` | Shows you the bot's ping
 `stats [game]` | Shows your game stats
 `connect4 <other>` | Invites a player to play Connect4 with you!

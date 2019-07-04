@@ -68,6 +68,7 @@ object Gameboi : EventListener {
             // Info
             HelpCommand,
             InviteCommand,
+            AboutCommand,
             PingCommand,
             StatsCommand,
             // Invites
