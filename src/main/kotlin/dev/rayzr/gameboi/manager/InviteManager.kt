@@ -11,14 +11,14 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 object InviteManager {
-    private val invites: MutableMap<User, Invite> = mutableMapOf()
+    private val invites: MutableMap<Long, Invite> = mutableMapOf()
     val currentInvites: Collection<Invite>
         get() = invites.values
 
-    operator fun get(user: User) = invites[user]
-    operator fun set(user: User, invite: Invite) = invites.put(user, invite)
+    operator fun get(user: User) = invites[user.idLong]
+    operator fun set(user: User, invite: Invite) = invites.put(user.idLong, invite)
     fun remove(user: User) {
-        invites.remove(user)
+        invites.remove(user.idLong)
     }
 
     fun invite(message: Message, from: Player, to: Player, game: Game) {
@@ -31,7 +31,7 @@ object InviteManager {
             return
         }
 
-        if (invites.containsKey(to.user)) {
+        if (invites.containsKey(to.user.idLong)) {
             message.channel.sendMessage(":x: That player has already been invited to a game!").queue {
                 Timer().schedule(Gameboi.errorLife) {
                     it.textChannel.deleteMessages(listOf(it, message)).queue()
