@@ -15,6 +15,7 @@ class Match(val game: Game, val channel: MessageChannel) {
     val players = mutableListOf<Player>()
     val renderContext = game.createRenderContext(this)
     var data: MatchData? = null
+    var isEnded = false
 
     private fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
 
@@ -47,6 +48,8 @@ class Match(val game: Game, val channel: MessageChannel) {
     }
 
     fun end() {
+        isEnded = true
+
         players.forEach {
             MatchManager.remove(it.user)
             it.currentMatch = null
@@ -57,6 +60,11 @@ class Match(val game: Game, val channel: MessageChannel) {
 
     fun bumpTimeout() {
         timeout?.cancel()
+
+        if (isEnded) {
+            return
+        }
+
         timeout = timer.schedule(MATCH_TIMEOUT) {
             channel.sendMessage(":x: Your **${game.name}** match has timed out, ${players.joinToString(" ") { it.user.asMention }}!").queue()
             end()
