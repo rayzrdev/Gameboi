@@ -40,10 +40,12 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             else -> emojis
         }
 
+        val score = board.sumBy { it.value }
+
         val message = when {
-            board.any { it == Tile.TWOZEROFOUREIGHT } -> ":tada: **${match.players[0].user.name}** has won and has earned **$coinsWon** coins!"
-            !canPlay(match) -> ":thumbsdown: **${match.players[0].user.name}** has lost!"
-            else -> ":thinking: **${match.players[0].user.name}** is playing 2048!"
+            board.any { it == Tile.TWOZEROFOUREIGHT } -> ":tada: **${match.players[0].user.name}** has won and has earned **$coinsWon** coins! Your final score was **$score**."
+            !canPlay(match) -> ":thumbsdown: **${match.players[0].user.name}** has lost! Your final score was **$score**."
+            else -> ":thinking: **${match.players[0].user.name}** is playing 2048! Your current score is **$score**."
         }
 
         render(match, emojisToRender, message) {
