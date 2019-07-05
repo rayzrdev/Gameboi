@@ -2,6 +2,7 @@ package dev.rayzr.gameboi
 
 import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.data.DataManager
+import dev.rayzr.gameboi.data.settings.GuildSettingsManager
 import dev.rayzr.gameboi.data.shop.initShopItems
 import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.MessageListener
@@ -30,6 +31,7 @@ fun main() {
 
     // TODO: Temporary, only while we're using flat files
     DataManager.load()
+    GuildSettingsManager.load()
 
     // Init JDA
     val jda = JDABuilder(Gameboi.token)
@@ -84,24 +86,36 @@ object Gameboi : EventListener {
             ShopCommand,
             BuyCommand,
             InventoryCommand,
-            EquipCommand
+            EquipCommand,
+            // Settings commands
+            SetPrefixCommand
     )
 
     override fun onEvent(event: GenericEvent) {
         if (event is GuildMessageReceivedEvent) {
-            if (!event.message.contentRaw.startsWith(prefix)) {
-                return
-            }
+            GuildSettingsManager.getGuildSettingsFor(event.guild).thenAccept { guildSettings ->
+                val raw = event.message.contentRaw
 
-            val split = event.message.contentRaw.substring(prefix.length).split(" ")
-            val commandLabel = split[0]
-            val args = split.slice(1 until split.size)
-            val command = commands.find { it.name == commandLabel }
+                val remainder = when {
+                    // Handle @mention commands
+                    raw.startsWith(event.jda.selfUser.asMention) -> raw.substring(event.jda.selfUser.asMention.length).trim()
+                    // Handle custom prefixes
+                    raw.startsWith(guildSettings.realPrefix) -> raw.substring(guildSettings.realPrefix.length)
+                    // Allow help no matter what custom prefix there is
+                    raw.startsWith("${prefix}help") -> "help"
+                    else -> return@thenAccept
+                }
 
-            if (command != null) {
-                command.handle(event, args)
-            } else {
-                MatchManager[event.author]?.run { game.handleMessage(Player[event.author], this, event.message) }
+                val split = remainder.split(" ")
+                val commandLabel = split[0]
+                val args = split.slice(1 until split.size)
+                val command = commands.find { it.name == commandLabel }
+
+                if (command != null) {
+                    command.handle(event, args)
+                } else {
+                    MatchManager[event.author]?.run { game.handleMessage(Player[event.author], this, event.message) }
+                }
             }
         }
     }
