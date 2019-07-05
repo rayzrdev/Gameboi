@@ -7,6 +7,7 @@ import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import kotlin.math.roundToInt
 
 object HelpCommand : Command("help", "Shows you help for Gameboi") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
@@ -110,6 +111,8 @@ object StatsCommand : Command("stats", "Shows your game stats", "stats [game]") 
                         "hangman" -> {
                             addStat(this, data, "Total Guesses", "hangman.total-guesses")
                             addStat(this, data, "Correct Guesses", "hangman.correct-guesses")
+                            // TODO: Method for computed stats?
+                            addField("Accuracy", "${(data.getStat("hangman.correct-guesses").toDouble() / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
                             addStat(this, data, "Wins", "hangman.wins")
                         }
                         "2048" -> {
