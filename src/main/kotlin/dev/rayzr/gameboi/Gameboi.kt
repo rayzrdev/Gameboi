@@ -42,13 +42,16 @@ fun main() {
     // Generate invite
     println(jda.getInviteUrl(Permission.MESSAGE_MANAGE))
 
-    Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence(jda) }
+    if (Gameboi.updateStatus) {
+        Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence(jda) }
+    }
 }
 
 object Gameboi : EventListener {
     val yaml = Yaml()
     lateinit var prefix: String
     lateinit var token: String
+    var updateStatus: Boolean = true
     var errorLife: Long = 0
 
     fun load() {
@@ -63,7 +66,8 @@ object Gameboi : EventListener {
         val output = yaml.load(FileInputStream(configFile)) as Map<String, Any>
         prefix = output["prefix"].toString()
         token = output["token"].toString()
-        errorLife = if (output["error-life"] == null) 15000 else output["error-life"].toString().toLong()
+        updateStatus = output["update-status"] as Boolean? ?: true
+        errorLife = output["error-life"]?.toString()?.toLong() ?: 15000
     }
 
     val commands: List<Command> = listOf(
