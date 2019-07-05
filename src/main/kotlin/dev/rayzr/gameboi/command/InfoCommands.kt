@@ -112,7 +112,7 @@ object StatsCommand : Command("stats", "Shows your game stats", "stats [game]") 
                             addStat(this, data, "Total Guesses", "hangman.total-guesses")
                             addStat(this, data, "Correct Guesses", "hangman.correct-guesses")
                             // TODO: Method for computed stats?
-                            addField("Accuracy", "${(data.getStat("hangman.correct-guesses").toDouble() / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
+                            addField("Accuracy", "${((data.getStat("hangman.correct-guesses")  * 100.0) / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
                             addStat(this, data, "Wins", "hangman.wins")
                         }
                         "2048" -> {
