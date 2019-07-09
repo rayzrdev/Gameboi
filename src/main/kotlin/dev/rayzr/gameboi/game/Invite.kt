@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.MessageReaction
 import java.util.concurrent.TimeUnit
 
 class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, private val life: Long = 120000) {
-    lateinit var message: Message
+    var message: Message? = null
 
     init {
         channel.sendMessage(
@@ -19,28 +19,37 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
                         .setDescription("Press the check mark below to accept!")
                         .setFooter("This invite will expire in ${life / 60000} minutes")
                         .build()
-        ).queue {
+        ).queue({
             message = it
 
             it.addReaction("\u2705").queue() // check mark
             it.addReaction("\u274c").queue() // x mark
 
             it.delete().queueAfter(life, TimeUnit.MILLISECONDS) { InviteManager.remove(to.user) }
-        }
+        }, {
+            InviteManager.remove(to.user)
+            channel.sendMessage(":x: Failed to send invite embed! Please check the bot's permissions!")
+        })
     }
 
     fun handleReaction(reaction: MessageReaction, message: Message, player: Player) {
-        if (player != to) {
+        if (player != to && player != from) {
             reaction.removeReaction(player.user).queue()
             return
         }
 
         when (reaction.reactionEmote.name) {
             "\u2705" -> {
+                if (player != to) {
+                    reaction.removeReaction(player.user).queue()
+                    return
+                }
+
                 // Check *again*
                 if (from.currentMatch != null || to.currentMatch != null) {
                     message.channel.sendMessage(":x: One of you has already joined another match!").queue {
                         it.textChannel.deleteMessages(listOf(it, message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
+                        InviteManager.remove(to.user)
                     }
                     return
                 }

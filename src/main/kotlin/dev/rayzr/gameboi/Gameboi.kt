@@ -40,7 +40,12 @@ fun main() {
             .awaitReady()
 
     // Generate invite
-    println(jda.getInviteUrl(Permission.MESSAGE_MANAGE))
+    println(jda.getInviteUrl(
+            Permission.MESSAGE_WRITE,
+            Permission.MESSAGE_MANAGE,
+            Permission.MESSAGE_EMBED_LINKS,
+            Permission.MESSAGE_ATTACH_FILES
+    ))
 
     if (Gameboi.updateStatus) {
         Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence(jda) }

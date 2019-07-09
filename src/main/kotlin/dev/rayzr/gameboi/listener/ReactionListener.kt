@@ -24,7 +24,7 @@ object ReactionListener : EventListener {
                 return
             }
 
-            InviteManager.currentInvites.find { it.message.id == msg.id }?.handleReaction(event.reaction, msg, player)
+            InviteManager.currentInvites.find { it.message?.id == msg.id }?.handleReaction(event.reaction, msg, player)
         }
     }
 }
