@@ -20,6 +20,8 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
                         .setFooter("This invite will expire in ${life / 60000} minutes")
                         .build()
         ).queue {
+            message = it
+
             it.addReaction("\u2705").queue() // check mark
             it.addReaction("\u274c").queue() // x mark
 
