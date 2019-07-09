@@ -29,7 +29,7 @@ object GuildSettingsManager {
                     try {
                         val section = it.value as Map<String, Any>
 
-                        return@mapValues GuildSettings(it.key, section.get("prefix")?.toString())
+                        return@mapValues GuildSettings(it.key, section["prefix"]?.toString())
                     } catch (e: Exception) {
                         println("Failed to load guild settings for player with ID '${it.key}'")
                         e.printStackTrace()

@@ -22,16 +22,16 @@ class HangmanMatchData : MatchData {
     val hasWon get() = word.all { attemptedLetters.contains(it) }
 }
 
-class HangmanStage(val index: Int, val image: Image) {
+class HangmanStage(val image: Image) {
     companion object {
         val stages = listOf(
-                HangmanStage(0, Images.get("character/head.png")),
-                HangmanStage(1, Images.get("character/body.png")),
-                HangmanStage(2, Images.get("character/leg-left.png")),
-                HangmanStage(3, Images.get("character/leg-right.png")),
-                HangmanStage(4, Images.get("character/arm-left.png")),
-                HangmanStage(5, Images.get("character/arm-right.png")),
-                HangmanStage(6, Images.get("dead.png"))
+                HangmanStage(Images.get("character/head.png")),
+                HangmanStage(Images.get("character/body.png")),
+                HangmanStage(Images.get("character/leg-left.png")),
+                HangmanStage(Images.get("character/leg-right.png")),
+                HangmanStage(Images.get("character/arm-left.png")),
+                HangmanStage(Images.get("character/arm-right.png")),
+                HangmanStage(Images.get("dead.png"))
         )
     }
 }

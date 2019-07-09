@@ -155,21 +155,14 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
 
     override fun createData(match: Match): MatchData = HangmanMatchData()
 
-    class Letter(val char: Char, val image: BufferedImage) {
+    class Letter(val image: BufferedImage) {
         companion object {
             private val letters: Map<Char, Letter> = "abcdefghijklmnopqrstuvwxyz".toCharArray()
-                    .associateBy({ it }, { Letter(it, Images.get("letter-$it.png")) })
+                    .associateBy({ it }, { Letter(Images.get("letter-$it.png")) })
 
             operator fun get(char: Char): Letter? {
                 return letters[char]
             }
         }
-    }
-
-    enum class Direction(val diff: Int) {
-        LEFT(-1),
-        UP(-4),
-        DOWN(4),
-        RIGHT(1)
     }
 }

@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
-class RenderContext(val match: Match, private val width: Int, private val height: Int) {
+class RenderContext(val match: Match, private val width: Int, height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() = image.createGraphics()
@@ -20,12 +20,12 @@ class RenderContext(val match: Match, private val width: Int, private val height
         graphics.clearRect(0, 0, image.width, image.height)
     }
 
-    fun renderText(text: String, x: Int, y: Int, size: Int = 35) {
+    /*fun renderText(text: String, x: Int, y: Int, size: Int = 35) {
         graphics.run {
             font = RenderUtils.font.deriveFont(size.toFloat())
             drawString(text, x, y)
         }
-    }
+    }*/
 
     fun renderCenteredText(text: String, x: Int = width / 2, y: Int = 65, size: Int = 40, outlineWidth: Int = 2) {
         graphics.run {

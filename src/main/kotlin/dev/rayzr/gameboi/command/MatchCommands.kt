@@ -3,8 +3,7 @@ package dev.rayzr.gameboi.command
 import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
-import java.util.*
-import kotlin.concurrent.schedule
+import java.util.concurrent.TimeUnit
 
 object QuitCommand : Command("quit", "Quits you from your current match") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
@@ -12,9 +11,7 @@ object QuitCommand : Command("quit", "Quits you from your current match") {
 
         if (player.currentMatch == null) {
             event.channel.sendMessage(":x: You are not in a match currently!").queue {
-                Timer().schedule(Gameboi.errorLife) {
-                    it.textChannel.deleteMessages(listOf(it, event.message)).queue()
-                }
+                it.textChannel.deleteMessages(listOf(it, event.message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
         } else {
             player.currentMatch?.end()

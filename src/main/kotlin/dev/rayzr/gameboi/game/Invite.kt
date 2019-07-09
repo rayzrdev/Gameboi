@@ -6,10 +6,9 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.MessageReaction
-import java.util.*
-import kotlin.concurrent.schedule
+import java.util.concurrent.TimeUnit
 
-class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, val life: Long = 120000) {
+class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, private val life: Long = 120000) {
     lateinit var message: Message
 
     init {
@@ -24,12 +23,7 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
             it.addReaction("\u2705").queue() // check mark
             it.addReaction("\u274c").queue() // x mark
 
-            message = it
-
-            Timer().schedule(life) {
-                InviteManager.remove(to.user)
-                message.delete().queue()
-            }
+            it.delete().queueAfter(life, TimeUnit.MILLISECONDS) { InviteManager.remove(to.user) }
         }
     }
 
@@ -44,9 +38,7 @@ class Invite(val channel: MessageChannel, val from: Player, val to: Player, val 
                 // Check *again*
                 if (from.currentMatch != null || to.currentMatch != null) {
                     message.channel.sendMessage(":x: One of you has already joined another match!").queue {
-                        Timer().schedule(Gameboi.errorLife) {
-                            it.textChannel.deleteMessages(listOf(it, message)).queue()
-                        }
+                        it.textChannel.deleteMessages(listOf(it, message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
                     }
                     return
                 }

@@ -7,8 +7,7 @@ import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
-import java.util.*
-import kotlin.concurrent.schedule
+import java.util.concurrent.TimeUnit
 
 object InviteManager {
     private val invites: MutableMap<Long, Invite> = mutableMapOf()
@@ -24,18 +23,14 @@ object InviteManager {
     fun invite(message: Message, from: Player, to: Player, game: Game) {
         if (from.currentMatch != null || to.currentMatch != null) {
             message.channel.sendMessage(":x: Players can only play one game at a time!").queue {
-                Timer().schedule(Gameboi.errorLife) {
-                    it.textChannel.deleteMessages(listOf(it, message)).queue()
-                }
+                it.textChannel.deleteMessages(listOf(it, message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }
 
         if (invites.containsKey(to.user.idLong)) {
             message.channel.sendMessage(":x: That player has already been invited to a game!").queue {
-                Timer().schedule(Gameboi.errorLife) {
-                    it.textChannel.deleteMessages(listOf(it, message)).queue()
-                }
+                it.textChannel.deleteMessages(listOf(it, message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }
@@ -46,9 +41,7 @@ object InviteManager {
     fun singlePlayer(message: Message, player: Player, game: Game) {
         if (player.currentMatch != null) {
             message.channel.sendMessage(":x: You can only play one game at a time!").queue {
-                Timer().schedule(Gameboi.errorLife) {
-                    it.textChannel.deleteMessages(listOf(it, message)).queue()
-                }
+                it.textChannel.deleteMessages(listOf(it, message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }

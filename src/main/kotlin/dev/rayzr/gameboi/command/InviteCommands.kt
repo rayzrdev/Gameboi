@@ -8,16 +8,13 @@ import dev.rayzr.gameboi.game.hangman.HangmanGame
 import dev.rayzr.gameboi.game.twenty48.Twenty48Game
 import dev.rayzr.gameboi.manager.InviteManager
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
-import java.util.*
-import kotlin.concurrent.schedule
+import java.util.concurrent.TimeUnit
 
 object Connect4Invite : Command("connect4", "Invites a player to play Connect4 with you!", "connect4 <other>") {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (event.message.mentionedMembers.size < 1) {
             event.channel.sendMessage(":x: Please mention the user you would like to play with!").queue {
-                Timer().schedule(Gameboi.errorLife) {
-                    it.textChannel.deleteMessages(listOf(it, event.message)).queue()
-                }
+                it.textChannel.deleteMessages(listOf(it, event.message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }
@@ -32,9 +29,7 @@ object FightInvite : Command("fight", "Invites a player to play Fight with you!"
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (event.message.mentionedMembers.size < 1) {
             event.channel.sendMessage(":x: Please mention the user you would like to play with!").queue {
-                Timer().schedule(Gameboi.errorLife) {
-                    it.textChannel.deleteMessages(listOf(it, event.message)).queue()
-                }
+                it.textChannel.deleteMessages(listOf(it, event.message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }

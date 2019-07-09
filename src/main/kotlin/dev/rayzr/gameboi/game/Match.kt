@@ -2,20 +2,18 @@ package dev.rayzr.gameboi.game
 
 import dev.rayzr.gameboi.manager.MatchManager
 import net.dv8tion.jda.api.entities.MessageChannel
-import java.util.*
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.schedule
 
 val MATCH_TIMEOUT = TimeUnit.MINUTES.toMillis(15)
 
 class Match(val game: Game, val channel: MessageChannel) {
-    val timer = Timer()
-    var timeout: TimerTask? = null
+    private var scheduledFuture: ScheduledFuture<*>? = null
 
     val players = mutableListOf<Player>()
     val renderContext = game.createRenderContext(this)
     var data: MatchData? = null
-    var isEnded = false
+    private var isEnded = false
 
     private fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
 
@@ -55,18 +53,17 @@ class Match(val game: Game, val channel: MessageChannel) {
             it.currentMatch = null
         }
 
-        timeout?.cancel()
+        scheduledFuture?.cancel(true)
     }
 
     fun bumpTimeout() {
-        timeout?.cancel()
+        scheduledFuture?.cancel(true)
 
         if (isEnded) {
             return
         }
 
-        timeout = timer.schedule(MATCH_TIMEOUT) {
-            channel.sendMessage(":x: Your **${game.name}** match has timed out, ${players.joinToString(" ") { it.user.asMention }}!").queue()
+        scheduledFuture = channel.sendMessage(":x: Your **${game.name}** match has timed out, ${players.joinToString(" ") { it.user.asMention }}!").queueAfter(MATCH_TIMEOUT, TimeUnit.MILLISECONDS) {
             end()
         }
     }

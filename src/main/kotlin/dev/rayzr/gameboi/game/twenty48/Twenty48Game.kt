@@ -361,11 +361,11 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
         TWOZEROFOUREIGHT(2048, Images.tile2048)
     }
 
-    enum class Direction(val diff: Int) {
-        LEFT(-1),
-        UP(-4),
-        DOWN(4),
-        RIGHT(1)
+    enum class Direction {
+        LEFT,
+        UP,
+        DOWN,
+        RIGHT
     }
 
     class Twenty48MatchData : MatchData {

@@ -6,11 +6,6 @@ abstract class Command(val name: String, val description: String, val usage: Str
     abstract fun handle(event: GuildMessageReceivedEvent, args: List<String>)
 
     fun fail(event: GuildMessageReceivedEvent, message: String) {
-        event.channel.sendMessage(":x: $message").queue {
-            // TODO: Don't delete error messages?
-//            Timer().schedule(Gameboi.errorLife) {
-//                it.textChannel.deleteMessages(listOf(it, event.message)).queue()
-//            }
-        }
+        event.channel.sendMessage(":x: $message").queue()
     }
 }
