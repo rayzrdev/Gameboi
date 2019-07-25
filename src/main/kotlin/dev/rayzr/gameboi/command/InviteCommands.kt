@@ -25,7 +25,7 @@ fun checkPermissions(event: GuildMessageReceivedEvent): Boolean {
     return true
 }
 
-object Connect4Invite : Command("connect4", "Invites a player to play Connect4 with you!", "connect4 <other>") {
+object Connect4Invite : Command("connect4", "Invites a player to play Connect4 with you!", "connect4 <other>", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return
@@ -44,7 +44,7 @@ object Connect4Invite : Command("connect4", "Invites a player to play Connect4 w
     }
 }
 
-object FightInvite : Command("fight", "Invites a player to play Fight with you!", "fight <other>") {
+object FightInvite : Command("fight", "Invites a player to play Fight with you!", "fight <other>", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return
@@ -63,7 +63,7 @@ object FightInvite : Command("fight", "Invites a player to play Fight with you!"
     }
 }
 
-object Twenty48Invite: Command("2048", "Starts a 2048 game.", "2048") {
+object Twenty48Invite: Command("2048", "Starts a 2048 game.", "2048", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return
@@ -73,7 +73,7 @@ object Twenty48Invite: Command("2048", "Starts a 2048 game.", "2048") {
     }
 }
 
-object HangmanInvite: Command("hangman", "Starts a hangman game.", "hangman") {
+object HangmanInvite: Command("hangman", "Starts a hangman game.", "hangman", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return

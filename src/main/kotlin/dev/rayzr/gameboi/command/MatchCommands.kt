@@ -5,7 +5,7 @@ import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import java.util.concurrent.TimeUnit
 
-object QuitCommand : Command("quit", "Quits you from your current match") {
+object QuitCommand : Command("quit", "Quits you from your current match", category = Categories.MATCH) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val player = Player[event.author]
 

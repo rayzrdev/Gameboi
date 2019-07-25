@@ -7,15 +7,23 @@ import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import java.util.*
 import kotlin.math.roundToInt
 
-object HelpCommand : Command("help", "Shows you help for Gameboi") {
+object HelpCommand : Command("help", "Shows you help for Gameboi", category = Categories.INFO) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         GuildSettingsManager.getGuildSettingsFor(event.guild).thenAccept { guildSettings ->
+            val commands = Gameboi.commands.groupBy { it.category }
+                    .toSortedMap(Comparator.comparingInt { it.priority })
+
             val embed = EmbedBuilder().run {
-                setDescription(Gameboi.commands.joinToString("\n\n") {
-                    "**${guildSettings.realPrefix}${it.usage}** - ${it.description}"
-                })
+                setDescription(commands.map { category ->
+                    val categoryCommands = category.value.joinToString("\n\n") { command ->
+                        "`${guildSettings.realPrefix}${command.usage}` - ${command.description}"
+                    }
+
+                    "> __**${category.key.name}**__\n\n $categoryCommands"
+                }.joinToString("\n\n"))
                 setAuthor("Gameboi Help Commands", "https://github.com/RayzrDev/Gameboi", event.jda.selfUser.effectiveAvatarUrl)
                 setColor(0x353940)
                 build()
@@ -25,7 +33,7 @@ object HelpCommand : Command("help", "Shows you help for Gameboi") {
     }
 }
 
-object InviteCommand : Command("invite", "Gives you an invite link for Gameboi") {
+object InviteCommand : Command("invite", "Gives you an invite link for Gameboi", category = Categories.INFO) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val embed = EmbedBuilder().run {
             setTitle("Ready to level up your server with some fun?")
@@ -40,7 +48,7 @@ object InviteCommand : Command("invite", "Gives you an invite link for Gameboi")
     }
 }
 
-object AboutCommand : Command("about", "Shows you more information about Gameboi") {
+object AboutCommand : Command("about", "Shows you more information about Gameboi", category = Categories.INFO) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val embed = EmbedBuilder().run {
             setTitle("What is Gameboi?")
@@ -68,14 +76,14 @@ object AboutCommand : Command("about", "Shows you more information about Gameboi
     }
 }
 
-object PingCommand : Command("ping", "Shows you the bot's ping") {
+object PingCommand : Command("ping", "Shows you the bot's ping", category = Categories.INFO) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         event.channel.sendMessage(":stopwatch: Pong! `${event.jda.gatewayPing}ms`").queue()
     }
 
 }
 
-object StatsCommand : Command("stats", "Shows your game stats", "stats [game]") {
+object StatsCommand : Command("stats", "Shows your game stats", "stats [game]", Categories.INFO) {
 
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         Player[event.author].getData().thenAccept { data ->
@@ -112,7 +120,7 @@ object StatsCommand : Command("stats", "Shows your game stats", "stats [game]") 
                             addStat(this, data, "Total Guesses", "hangman.total-guesses")
                             addStat(this, data, "Correct Guesses", "hangman.correct-guesses")
                             // TODO: Method for computed stats?
-                            addField("Accuracy", "${((data.getStat("hangman.correct-guesses")  * 100.0) / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
+                            addField("Accuracy", "${((data.getStat("hangman.correct-guesses") * 100.0) / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
                             addStat(this, data, "Wins", "hangman.wins")
                         }
                         "2048" -> {

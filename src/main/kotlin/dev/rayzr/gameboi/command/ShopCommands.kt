@@ -4,7 +4,7 @@ import dev.rayzr.gameboi.data.shop.ShopRegistry
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 
-object ShopCommand : Command("shop", "Lets you see what is available for purchase in the shop") {
+object ShopCommand : Command("shop", "Lets you see what is available for purchase in the shop", category = Categories.SHOP) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         val items = ShopRegistry.items.joinToString("\n\n") {
             "[__${it.slot.name}__] **${it.name}** (${it.cost} coins)"
@@ -14,7 +14,7 @@ object ShopCommand : Command("shop", "Lets you see what is available for purchas
     }
 }
 
-object BuyCommand : Command("buy", "Lets you buy items from the shop", "buy <item>") {
+object BuyCommand : Command("buy", "Lets you buy items from the shop", "buy <item>", Categories.SHOP) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (args.isEmpty()) {
             fail(event, "Please specify the item you would like to purchase!")
@@ -53,7 +53,7 @@ object BuyCommand : Command("buy", "Lets you buy items from the shop", "buy <ite
     }
 }
 
-object InventoryCommand : Command("inventory", "Shows you what items you currently have") {
+object InventoryCommand : Command("inventory", "Shows you what items you currently have", category = Categories.SHOP) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         Player[event.author].getData().thenAccept {
             val items = when {
@@ -68,7 +68,7 @@ object InventoryCommand : Command("inventory", "Shows you what items you current
     }
 }
 
-object EquipCommand : Command("equip", "Lets you equip different items", "equip <slot> none|<item>") {
+object EquipCommand : Command("equip", "Lets you equip different items", "equip <slot> none|<item>", Categories.SHOP) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (args.isEmpty()) {
             val slots = ShopRegistry.slots.joinToString("\n") { "- ${it.internalName}" }

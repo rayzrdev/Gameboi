@@ -12,7 +12,14 @@ object ReactionListener : EventListener {
         if (event is GuildMessageReactionAddEvent) {
             if (event.user.isBot) return
 
-            val msg = event.channel.getHistoryAround(event.messageId, 1).complete().getMessageById(event.messageId)!!
+            val history = try {
+                event.channel.getHistoryAround(event.messageId, 1).complete() ?: return
+            } catch (ex: Exception) {
+                // Ignore if we can't get the message history
+                return
+            }
+
+            val msg = history.getMessageById(event.messageId) ?: return
             if (msg.author != msg.jda.selfUser) return
 
             val player = Player[event.user]
