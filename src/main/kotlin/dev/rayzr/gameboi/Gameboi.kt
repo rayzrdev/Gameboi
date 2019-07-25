@@ -103,6 +103,8 @@ object Gameboi : EventListener {
     override fun onEvent(event: GenericEvent) {
         if (event is GuildMessageReceivedEvent) {
             GuildSettingsManager.getGuildSettingsFor(event.guild).thenAccept { guildSettings ->
+                if (event.author.isBot) return@thenAccept
+
                 val raw = event.message.contentRaw
 
                 val remainder = when {
