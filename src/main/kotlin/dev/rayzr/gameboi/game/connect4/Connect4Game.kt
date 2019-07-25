@@ -36,7 +36,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
 
         match.players[0].getData().thenAccept { playerOneData ->
             match.players[1].getData().thenAccept { playerTwoData ->
-                render(match, emojisToRender, message) {
+                render(match, emojisToRender, message, match.players[data.currentPlayer].user.asMention) {
                     clear()
                     graphics.run {
                         setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

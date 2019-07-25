@@ -88,7 +88,7 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
         data.playerOne.player.getData().thenAccept { playerOneData ->
             data.playerTwo.player.getData().thenAccept { playerTwoData ->
-                render(match, emojisToRender, message) {
+                render(match, emojisToRender, message, data.currentPlayer.player.user.asMention) {
                     graphics.run {
                         scale(10.0, 10.0)
 
