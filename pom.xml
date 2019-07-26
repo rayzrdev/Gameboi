@@ -26,7 +26,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.BETA.0_10</version>
+            <version>4.BETA.0_28</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
