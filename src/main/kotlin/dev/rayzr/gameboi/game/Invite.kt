@@ -4,11 +4,11 @@ import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.manager.InviteManager
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.MessageReaction
+import net.dv8tion.jda.api.entities.TextChannel
 import java.util.concurrent.TimeUnit
 
-class Invite(val channel: MessageChannel, val from: Player, val to: Player, val game: Game, private val life: Long = 120000) {
+class Invite(val channel: TextChannel, val from: Player, val to: Player, val game: Game, private val life: Long = 120000) {
     var message: Message? = null
 
     init {

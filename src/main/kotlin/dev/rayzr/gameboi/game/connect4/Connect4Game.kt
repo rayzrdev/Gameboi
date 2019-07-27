@@ -114,7 +114,10 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             else -> Slot.TWO
         }
 
-        player.editData { updateStatBy("connect4.played-${slotType.colorName}", 1) }
+        val user = player.user
+        val scope = match.channel.guild
+
+        player.editData { updateStatBy(user, scope, "connect4.played-${slotType.colorName}", 1) }
 
         var index = -1
         for (i in 5.downTo(0)) {
@@ -139,7 +142,7 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
             data.winner = player
             data.coinsWon = (15..25).random()
             player.editData {
-                updateStatBy("connect4.wins", 1)
+                updateStatBy(user, scope, "connect4.wins", 1)
                 coins += data.coinsWon
             }
             match.end()

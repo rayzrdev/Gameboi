@@ -2,6 +2,8 @@ package dev.rayzr.gameboi.command
 
 import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.data.PlayerData
+import dev.rayzr.gameboi.data.leaderboard.Leaderboard
+import dev.rayzr.gameboi.data.leaderboard.LeaderboardManager
 import dev.rayzr.gameboi.data.settings.GuildSettingsManager
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.EmbedBuilder
@@ -151,3 +153,76 @@ object StatsCommand : Command("stats", "Shows your game stats", "stats [game]", 
     }
 
 }
+
+//object LeaderboardCommand : Command("leaderboard", "Shows the leaderboards for all players", "leaderboard [guild|all]", Categories.INFO) {
+//
+//    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
+//        val scope = when (args[0]) {
+//            "guild" -> event.channel.guild.id
+//            "all" -> Leaderboard.GLOBAL_SCOPE
+//            else -> {
+//                return fail(event, "That is not a valid context, please specify either `guild` or `all`!")
+//            }
+//        }
+//
+//        LeaderboardManager[scope].thenAccept {
+//            val embed = EmbedBuilder().run {
+//
+//                // TODO: Set up stat registry to automate this PLEASE
+//                when (args.joinToString(" ").toLowerCase()) {
+//                    "" -> {
+//                        addStat(this, data, "Total Games Played", "games-played.total")
+//                        addStat(this, data, "Connect 4 Games Played", "games-played.Connect 4")
+//                        addStat(this, data, "Fight Games Played", "games-played.Fight")
+//                        addStat(this, data, "Hangman Games Played", "games-played.Hangman")
+//                        addStat(this, data, "2048 Games Played", "games-played.2048")
+//                    }
+//                    "connect 4" -> {
+//                        addStat(this, data, "Red Tiles Played", "connect4.played-red")
+//                        addStat(this, data, "Yellow Tiles Played", "connect4.played-yellow")
+//                        addStat(this, data, "Wins", "connect4.wins")
+//                    }
+//                    "fight" -> {
+//                        addStat(this, data, "Damage Dealt", "fight.damage-dealt")
+//                        addStat(this, data, "Damage Taken", "fight.damage-taken")
+//                        addStat(this, data, "Successful Attacks", "fight.successful-attacks")
+//                        addStat(this, data, "Missed Attacks", "fight.missed-attacks")
+//                        addStat(this, data, "Punches", "fight.attack.punch")
+//                        addStat(this, data, "Kicks", "fight.attack.kick")
+//                        addStat(this, data, "Slams", "fight.attack.slam")
+//                        addStat(this, data, "Wins", "fight.wins")
+//                    }
+//                    "hangman" -> {
+//                        addStat(this, data, "Total Guesses", "hangman.total-guesses")
+//                        addStat(this, data, "Correct Guesses", "hangman.correct-guesses")
+//                        // TODO: Method for computed stats?
+//                        addField("Accuracy", "${((data.getStat("hangman.correct-guesses") * 100.0) / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
+//                        addStat(this, data, "Wins", "hangman.wins")
+//                    }
+//                    "2048" -> {
+//                        addStat(this, data, "Total Moves", "2048.total-moves")
+//                        addStat(this, data, "Highest Score", "2048.highest-score")
+//                        addStat(this, data, "Wins", "2048.wins")
+//                    }
+//                    else -> {
+//                        return@thenAccept fail(event, "That is not a valid game!")
+//                    }
+//                }
+//
+//                setFooter("${event.author.name}'s stats")
+//                setThumbnail(event.author.avatarUrl)
+//                setColor(0x353940)
+//
+//
+//                build()
+//            }
+//
+//            event.channel.sendMessage(embed).queue()
+//        }
+//    }
+//
+//    private fun addStat(embed: EmbedBuilder, data: PlayerData, name: String, stat: String) {
+//        embed.addField(name, String.format("%,d", data), true)
+//    }
+//
+//}

@@ -158,7 +158,10 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
         data.lastAttack = Hit(data.currentPlayer, attack)
 
-        player.editData { updateStatBy("fight.attack.${attack.name}", 1) }
+        val user = player.user
+        val scope = match.channel.guild
+
+        player.editData { updateStatBy(user, scope, "fight.attack.${attack.name}", 1) }
 
         if (Math.random() < attack.attackChance) {
             // Hit!
@@ -168,10 +171,10 @@ object FightGame : Game(800, 600, "Fight", 2) {
             data.otherPlayer.health -= damage
 
             player.editData {
-                updateStatBy("fight.damage-dealt", damage)
-                updateStatBy("fight.successful-attacks", 1)
+                updateStatBy(user, scope, "fight.damage-dealt", damage)
+                updateStatBy(user, scope, "fight.successful-attacks", 1)
             }
-            data.otherPlayer.player.editData { updateStatBy("fight.damage-taken", damage) }
+            data.otherPlayer.player.editData { updateStatBy(user, scope, "fight.damage-taken", damage) }
 
             if (data.otherPlayer.health <= 0) {
                 data.otherPlayer.health = 0
@@ -179,14 +182,14 @@ object FightGame : Game(800, 600, "Fight", 2) {
 
                 data.coinsWon = (20..30).random()
                 player.editData {
-                    updateStatBy("fight.wins", 1)
+                    updateStatBy(user, scope, "fight.wins", 1)
                     coins += data.coinsWon
                 }
                 match.end()
             }
         } else {
             // Miss!
-            player.editData { updateStatBy("fight.missed-attacks", 1) }
+            player.editData { updateStatBy(user, scope, "fight.missed-attacks", 1) }
 
             data.lastHitResult = HitResult.MISS
         }

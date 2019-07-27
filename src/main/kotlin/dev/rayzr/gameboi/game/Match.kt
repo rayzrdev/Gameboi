@@ -1,13 +1,16 @@
 package dev.rayzr.gameboi.game
 
 import dev.rayzr.gameboi.manager.MatchManager
+import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.MessageChannel
+import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 val MATCH_TIMEOUT = TimeUnit.MINUTES.toMillis(15)
 
-class Match(val game: Game, val channel: MessageChannel) {
+class Match(val game: Game, val channel: TextChannel) {
     private var scheduledFuture: ScheduledFuture<*>? = null
 
     val players = mutableListOf<Player>()
@@ -34,10 +37,10 @@ class Match(val game: Game, val channel: MessageChannel) {
     private fun begin() {
         data = game.createData(this)
         game.begin(this)
-        players.forEach {
-            it.editData {
-                updateStatBy("games-played.${game.name}", 1)
-                updateStatBy("games-played.total", 1)
+        players.forEach { player ->
+            player.editData {
+                updateStatBy(player.user, channel.guild.name, "games-played.${game.name}", 1)
+                updateStatBy(player.user, channel.guild.name, "games-played.total", 1)
             }
         }
 

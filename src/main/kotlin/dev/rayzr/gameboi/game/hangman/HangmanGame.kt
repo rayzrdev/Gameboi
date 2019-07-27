@@ -114,8 +114,11 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
 
             data.attemptedLetters.add(letter)
 
+            val user = player.user
+            val scope = match.channel.guild
+
             if (data.incorrectLetters.contains(letter)) {
-                player.editData { updateStatBy("hangman.total-guesses", 1) }
+                player.editData { updateStatBy(user, scope, "hangman.total-guesses", 1) }
 
                 if (data.isDead) {
                     draw(match, ":x: You tried **$displayLetter**, but it is not part of the word! The word was **${data.word}**. You have died!")
@@ -125,8 +128,8 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                 }
             } else {
                 player.editData {
-                    updateStatBy("hangman.total-guesses", 1)
-                    updateStatBy("hangman.correct-guesses", 1)
+                    updateStatBy(user, scope, "hangman.total-guesses", 1)
+                    updateStatBy(user, scope, "hangman.correct-guesses", 1)
                 }
 
                 // All blanks filled
@@ -134,7 +137,7 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                     val coinsEarned = (5..10).random() + (5 - data.currentStage) * 5
 
                     player.editData {
-                        updateStatBy("hangman.wins", 1)
+                        updateStatBy(user, scope, "hangman.wins", 1)
                         coins += coinsEarned
                     }
 

@@ -69,7 +69,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
                 board.any { it == Tile.TWOZEROFOUREIGHT } -> {
                     renderCenteredText("You won!")
                     match.players[0].editData {
-                        updateStatBy("2048.wins", 1)
+                        updateStatBy(match.players[0].user, match.channel.guild, "2048.wins", 1)
                         coins += coinsWon
                     }
                     match.end()
@@ -193,9 +193,9 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             val score = board.sumBy { it.value }
 
             match.players[0].editData {
-                updateStatBy("2048.total-moves", 1)
+                updateStatBy(match.players[0].user, match.channel.guild, "2048.total-moves", 1)
                 if (getStat("2048.highest-score") < score) {
-                    setStat("2048.highest-score", score)
+                    setStat(match.players[0].user, match.channel.guild, "2048.highest-score", score)
                 }
             }
 

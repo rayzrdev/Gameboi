@@ -6,6 +6,7 @@ import dev.rayzr.gameboi.game.Invite
 import dev.rayzr.gameboi.game.Match
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import java.util.concurrent.TimeUnit
 
@@ -35,7 +36,11 @@ object InviteManager {
             return
         }
 
-        this[to.user] = Invite(message.channel, from, to, game)
+        if (message.channel !is TextChannel) {
+            throw IllegalArgumentException("message.channel must be a guild TextChannel!")
+        }
+
+        this[to.user] = Invite(message.channel as TextChannel, from, to, game)
     }
 
     fun singlePlayer(message: Message, player: Player, game: Game) {
@@ -46,7 +51,11 @@ object InviteManager {
             return
         }
 
-        val match = Match(game, message.channel)
+        if (message.channel !is TextChannel) {
+            throw IllegalArgumentException("message.channel must be a guild TextChannel!")
+        }
+
+        val match = Match(game, message.channel as TextChannel)
         match.addPlayer(player)
     }
 }
