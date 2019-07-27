@@ -39,8 +39,8 @@ class Match(val game: Game, val channel: TextChannel) {
         game.begin(this)
         players.forEach { player ->
             player.editData {
-                updateStatBy(player.user, channel.guild.name, "games-played.${game.name}", 1)
-                updateStatBy(player.user, channel.guild.name, "games-played.total", 1)
+                updateStatBy(player.user, channel.guild, "games-played.${game.name}", 1)
+                updateStatBy(player.user, channel.guild, "games-played.total", 1)
             }
         }
 
