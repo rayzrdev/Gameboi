@@ -24,11 +24,15 @@ object LeaderboardManager {
         raw.mapKeys { it.key }
                 .mapValues {
                     try {
-                        val section = it.value as Map<String, Int>
+                        val section = it.value as Map<String, Map<String, Int>>
 
-                        return@mapValues Leaderboard(it.key, section.map { item -> LeaderboardEntry(item.key, item.value) }.toMutableList())
+                        return@mapValues Leaderboard(it.key, section.mapValues { stat ->
+                            stat.value.map { entry ->
+                                LeaderboardEntry(entry.key, entry.value)
+                            }.toMutableList()
+                        }.toMutableMap())
                     } catch (e: Exception) {
-                        println("Failed to load leaderboard for scope '${it.key}'")
+                        println("Failed to load leader-board for scope '${it.key}'")
                         e.printStackTrace()
                         return@mapValues null
                     }

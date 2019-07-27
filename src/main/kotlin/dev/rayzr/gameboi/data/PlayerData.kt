@@ -26,11 +26,11 @@ data class PlayerData(
         stats[name] = value
 
         LeaderboardManager.editLeaderboardFor(guild.id) {
-            addStat(user.name, value)
+            addStat(name, user.name, value)
         }
 
         LeaderboardManager.editLeaderboardFor(Leaderboard.GLOBAL_SCOPE) {
-            addStat(user.name, value)
+            addStat(name, user.name, value)
         }
     }
 
