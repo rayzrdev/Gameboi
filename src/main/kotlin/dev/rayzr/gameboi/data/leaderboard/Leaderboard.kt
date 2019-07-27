@@ -2,7 +2,7 @@ package dev.rayzr.gameboi.data.leaderboard
 
 class Leaderboard(val scope: String, val top: MutableList<LeaderboardEntry> = mutableListOf(), val limit: Int = 10) {
     companion object {
-        val GLOBAL_SCOPE = "ALL"
+        const val GLOBAL_SCOPE = "ALL"
     }
 
     fun addStat(name: String, value: Int) {
