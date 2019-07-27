@@ -63,8 +63,8 @@ object AboutCommand : Command("about", "Shows you more information about Gameboi
                 :heart: Click [here](https://patreon.com/Rayzr522) if you want to support **Gameboi** and its creators!
             """.trimIndent())
 
-            addField("Servers", event.jda.guilds.size.toString(), true)
-            addField("Users", event.jda.users.size.toString(), true)
+            addField("Servers", "%,d".format(event.jda.guilds.size), true)
+            addField("Users", "%,d".format(event.jda.users.size), true)
             setFooter("Created by Rayzr522#9429 and zaeem#3333")
 
             setImage("https://raw.githubusercontent.com/RayzrDev/Gameboi/master/res/banner.png")
