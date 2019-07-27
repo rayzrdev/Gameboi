@@ -2,6 +2,7 @@ package dev.rayzr.gameboi
 
 import dev.rayzr.gameboi.command.*
 import dev.rayzr.gameboi.data.DataManager
+import dev.rayzr.gameboi.data.leaderboard.LeaderboardManager
 import dev.rayzr.gameboi.data.settings.GuildSettingsManager
 import dev.rayzr.gameboi.data.shop.initShopItems
 import dev.rayzr.gameboi.game.Player
@@ -32,6 +33,7 @@ fun main() {
     // TODO: Temporary, only while we're using flat files
     DataManager.load()
     GuildSettingsManager.load()
+    LeaderboardManager.load()
 
     // Init JDA
     val jda = JDABuilder(Gameboi.token)
