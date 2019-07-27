@@ -19,10 +19,15 @@ class Leaderboard(val scope: String, val top: MutableMap<String, MutableList<Lea
 
         for (i in list.indices) {
             if (value > list[i].value) {
+                // Remove old scores from that user
+                list.removeIf { it.name == name }
+
                 list.add(i, LeaderboardEntry(name, value))
+
                 while (top.size > limit) {
                     list.remove(list.last())
                 }
+
                 return
             }
         }
