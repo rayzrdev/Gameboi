@@ -6,6 +6,11 @@ class Leaderboard(val scope: String, val top: MutableList<LeaderboardEntry> = mu
     }
 
     fun addStat(name: String, value: Int) {
+        if (top.size < 1) {
+            top.add(LeaderboardEntry(name, value))
+            return
+        }
+
         for (i in top.indices) {
             if (value > top[i].value) {
                 top.add(i, LeaderboardEntry(name, value))
