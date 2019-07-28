@@ -9,14 +9,14 @@ import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.MessageListener
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
+import net.dv8tion.jda.api.sharding.ShardManager
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.FileInputStream
@@ -36,13 +36,19 @@ fun main() {
     LeaderboardManager.load()
 
     // Init JDA
-    val jda = JDABuilder(Gameboi.token)
+    Gameboi.shardManager = DefaultShardManagerBuilder()
+            .setShardsTotal(5)
+            .setToken(Gameboi.token)
             .addEventListeners(Gameboi, ReactionListener, MessageListener)
             .build()
-            .awaitReady()
+
+//    val jda = JDABuilder(Gameboi.token)
+//            .addEventListeners(Gameboi, ReactionListener, MessageListener)
+//            .build()
+//            .awaitReady()
 
     // Generate invite
-    println(jda.getInviteUrl(
+    println(Gameboi.shardManager.shards.first().getInviteUrl(
             Permission.MESSAGE_WRITE,
             Permission.MESSAGE_MANAGE,
             Permission.MESSAGE_EMBED_LINKS,
@@ -50,16 +56,19 @@ fun main() {
     ))
 
     if (Gameboi.updateStatus) {
-        Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence(jda) }
+        Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence() }
     }
 }
 
 object Gameboi : EventListener {
+    lateinit var shardManager: ShardManager
+
     val yaml = Yaml()
     lateinit var prefix: String
     lateinit var token: String
     var updateStatus: Boolean = true
     var errorLife: Long = 0
+
 
     fun load() {
         val configFile = File("config.yml")
@@ -133,9 +142,9 @@ object Gameboi : EventListener {
         }
     }
 
-    fun updatePresence(jda: JDA) {
-        jda.presence.setPresence(OnlineStatus.ONLINE, Activity.watching(
-                "over ${jda.guilds.size} guilds | ${prefix}help"
+    fun updatePresence() {
+        shardManager.setPresence(OnlineStatus.ONLINE, Activity.watching(
+                "over ${shardManager.guilds.size} guilds | ${prefix}help"
         ))
     }
 }

@@ -1,6 +1,6 @@
 package dev.rayzr.gameboi.command
 
-private var nextPriority = 0;
+private var nextPriority = 0
 
 class Category(val name: String, val priority: Int = nextPriority++)
 

@@ -2,8 +2,6 @@ package dev.rayzr.gameboi.command
 
 import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.data.PlayerData
-import dev.rayzr.gameboi.data.leaderboard.Leaderboard
-import dev.rayzr.gameboi.data.leaderboard.LeaderboardManager
 import dev.rayzr.gameboi.data.settings.GuildSettingsManager
 import dev.rayzr.gameboi.game.Player
 import net.dv8tion.jda.api.EmbedBuilder
@@ -65,9 +63,11 @@ object AboutCommand : Command("about", "Shows you more information about Gameboi
                 :heart: Click [here](https://patreon.com/Rayzr522) if you want to support **Gameboi** and its creators!
             """.trimIndent())
 
-            addField("Servers", "%,d".format(event.jda.guilds.size), true)
-            addField("Users", "%,d".format(event.jda.users.size), true)
-            setFooter("Created by Rayzr522#9429 and zaeem#3333")
+            addField("Servers", "%,d".format(Gameboi.shardManager.guilds.size), true)
+            addField("Users", "%,d".format(Gameboi.shardManager.users.size), true)
+
+            val shardInfo = event.jda.shardInfo
+            setFooter("Created by Rayzr522#9429 and zaeem#3333 || Shard %d/%d".format(shardInfo.shardId + 1, shardInfo.shardTotal))
 
             setImage("https://raw.githubusercontent.com/RayzrDev/Gameboi/master/res/banner.png")
 
