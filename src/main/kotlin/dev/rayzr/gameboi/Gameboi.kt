@@ -123,8 +123,6 @@ object Gameboi : EventListener {
                     raw.startsWith(event.jda.selfUser.asMention) -> raw.substring(event.jda.selfUser.asMention.length).trim()
                     // Handle custom prefixes
                     raw.startsWith(guildSettings.realPrefix) -> raw.substring(guildSettings.realPrefix.length)
-                    // Allow help no matter what custom prefix there is
-                    raw.startsWith("${prefix}help") -> "help"
                     else -> return@thenAccept
                 }
 
