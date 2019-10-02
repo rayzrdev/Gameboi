@@ -67,7 +67,7 @@ object AboutCommand : Command("about", "Shows you more information about Gameboi
             addField("Users", "%,d".format(Gameboi.shardManager.users.size), true)
 
             val shardInfo = event.jda.shardInfo
-            setFooter("Created by Rayzr522#9429 and zaeem#3333 || Shard %d/%d".format(shardInfo.shardId + 1, shardInfo.shardTotal))
+            setFooter("Created by Rayzr522#9429 and zp4rker#3333 || Shard %d/%d".format(shardInfo.shardId + 1, shardInfo.shardTotal))
 
             setImage("https://raw.githubusercontent.com/RayzrDev/Gameboi/master/res/banner.png")
 
