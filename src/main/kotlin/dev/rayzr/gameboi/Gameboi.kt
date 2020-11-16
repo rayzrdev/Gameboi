@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
+import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import org.yaml.snakeyaml.Yaml
@@ -36,7 +37,11 @@ fun main() {
     LeaderboardManager.load()
 
     // Init JDA
-    Gameboi.shardManager = DefaultShardManagerBuilder()
+    Gameboi.shardManager = DefaultShardManagerBuilder.create(
+            GatewayIntent.GUILD_MESSAGES,
+            GatewayIntent.GUILD_MESSAGE_REACTIONS,
+            GatewayIntent.GUILD_MEMBERS
+    )
             .setShardsTotal(Gameboi.shardCount)
             .setToken(Gameboi.token)
             .addEventListeners(Gameboi, ReactionListener, MessageListener)
