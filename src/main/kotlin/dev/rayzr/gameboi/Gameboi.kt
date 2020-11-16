@@ -37,7 +37,7 @@ fun main() {
 
     // Init JDA
     Gameboi.shardManager = DefaultShardManagerBuilder()
-            .setShardsTotal(5)
+            .setShardsTotal(Gameboi.shardCount)
             .setToken(Gameboi.token)
             .addEventListeners(Gameboi, ReactionListener, MessageListener)
             .build()
@@ -66,6 +66,7 @@ object Gameboi : EventListener {
     val yaml = Yaml()
     lateinit var prefix: String
     lateinit var token: String
+    var shardCount: Int = 1
     var updateStatus: Boolean = true
     var errorLife: Long = 0
 
@@ -82,6 +83,7 @@ object Gameboi : EventListener {
         val output = yaml.load(FileInputStream(configFile)) as Map<String, Any>
         prefix = output["prefix"].toString()
         token = output["token"].toString()
+        shardCount = output["shards"] as Int ?: 1
         updateStatus = output["update-status"] as Boolean? ?: true
         errorLife = output["error-life"]?.toString()?.toLong() ?: 15000
     }
