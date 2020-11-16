@@ -39,8 +39,7 @@ fun main() {
     // Init JDA
     Gameboi.shardManager = DefaultShardManagerBuilder.create(
             GatewayIntent.GUILD_MESSAGES,
-            GatewayIntent.GUILD_MESSAGE_REACTIONS,
-            GatewayIntent.GUILD_MEMBERS
+            GatewayIntent.GUILD_MESSAGE_REACTIONS
     )
             .setShardsTotal(Gameboi.shardCount)
             .setToken(Gameboi.token)
