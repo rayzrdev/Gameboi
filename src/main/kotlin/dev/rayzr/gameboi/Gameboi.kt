@@ -87,7 +87,7 @@ object Gameboi : EventListener {
         val output = yaml.load(FileInputStream(configFile)) as Map<String, Any>
         prefix = output["prefix"].toString()
         token = output["token"].toString()
-        shardCount = output["shards"] as Int ?: 1
+        shardCount = (output["shards"] ?: 1) as Int
         updateStatus = output["update-status"] as Boolean? ?: true
         errorLife = output["error-life"]?.toString()?.toLong() ?: 15000
     }
@@ -124,13 +124,24 @@ object Gameboi : EventListener {
 
                 val raw = event.message.contentRaw
 
-                val remainder = when {
-                    // Handle @mention commands
-                    raw.startsWith(event.jda.selfUser.asMention) -> raw.substring(event.jda.selfUser.asMention.length).trim()
-                    // Handle custom prefixes
-                    raw.startsWith(guildSettings.realPrefix) -> raw.substring(guildSettings.realPrefix.length)
-                    else -> return@thenAccept
+                val taggedBotRole = event.message.mentionedRoles.find {
+                    raw.startsWith(it.asMention)
+                            && event.guild.selfMember.roles.contains(it)
+                            && it.name == event.jda.selfUser.name
                 }
+
+                val prefixes = listOfNotNull(
+                        taggedBotRole?.asMention,
+                        "<@${event.jda.selfUser.id}>",
+                        "<@!${event.jda.selfUser.id}>",
+                        guildSettings.realPrefix
+                )
+
+                val remainder = prefixes.find {
+                    raw.startsWith(it)
+                }?.let {
+                    raw.substring(it.length).trim()
+                } ?: return@thenAccept
 
                 val split = remainder.split(" ")
                 val commandLabel = split[0]
