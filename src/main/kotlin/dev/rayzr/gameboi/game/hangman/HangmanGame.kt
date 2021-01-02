@@ -121,7 +121,10 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                 player.editData { updateStatBy(user, scope, "hangman.total-guesses", 1) }
 
                 if (data.isDead) {
-                    draw(match, ":x: You tried **$displayLetter**, but it is not part of the word! The word was **${data.word}**. You have died!")
+                    draw(
+                        match,
+                        ":x: You tried **$displayLetter**, but it is not part of the word! The word was **${data.word}**. You have died!"
+                    )
                     match.end()
                 } else {
                     draw(match, ":x: You tried **$displayLetter**, but it is not part of the word!")
@@ -141,7 +144,10 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
                         coins += coinsEarned
                     }
 
-                    draw(match, ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations, you have earned **$coinsEarned** coins!")
+                    draw(
+                        match,
+                        ":tada: You tried **$displayLetter** and you guessed the word! The word was **${data.word}**. Congratulations, you have earned **$coinsEarned** coins!"
+                    )
                     match.end()
                 } else {
                     draw(match, ":white_check_mark: You tried **$displayLetter** and you guessed correctly!")
@@ -161,7 +167,7 @@ object HangmanGame : Game(700, 600, "Hangman", 1) {
     class Letter(val image: BufferedImage) {
         companion object {
             private val letters: Map<Char, Letter> = "abcdefghijklmnopqrstuvwxyz".toCharArray()
-                    .associateBy({ it }, { Letter(Images.get("letter-$it.png")) })
+                .associateBy({ it }, { Letter(Images.get("letter-$it.png")) })
 
             operator fun get(char: Char): Letter? {
                 return letters[char]

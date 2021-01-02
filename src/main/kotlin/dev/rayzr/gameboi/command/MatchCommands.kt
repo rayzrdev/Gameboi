@@ -11,7 +11,8 @@ object QuitCommand : Command("quit", "Quits you from your current match", catego
 
         if (player.currentMatch == null) {
             event.channel.sendMessage(":x: You are not in a match currently!").queue {
-                it.textChannel.deleteMessages(listOf(it, event.message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
+                it.textChannel.deleteMessages(listOf(it, event.message))
+                    .queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
         } else {
             player.currentMatch?.end()

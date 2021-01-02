@@ -1,6 +1,10 @@
 package dev.rayzr.gameboi.data.leaderboard
 
-class Leaderboard(val scope: String, val top: MutableMap<String, MutableList<LeaderboardEntry>> = mutableMapOf(), val limit: Int = 10) {
+class Leaderboard(
+    val scope: String,
+    val top: MutableMap<String, MutableList<LeaderboardEntry>> = mutableMapOf(),
+    val limit: Int = 10
+) {
     companion object {
         const val GLOBAL_SCOPE = "ALL"
     }
@@ -33,7 +37,8 @@ class Leaderboard(val scope: String, val top: MutableMap<String, MutableList<Lea
         }
     }
 
-    fun toMap(): Map<String, Map<String, Int>> = top.mapValues { it.value.associate { entry -> entry.name to entry.value } }
+    fun toMap(): Map<String, Map<String, Int>> =
+        top.mapValues { it.value.associate { entry -> entry.name to entry.value } }
 }
 
 class LeaderboardEntry(val name: String, val value: Int)

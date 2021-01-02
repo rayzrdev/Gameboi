@@ -22,32 +22,32 @@ object LeaderboardManager {
         leaderboards.clear()
 
         raw.mapKeys { it.key }
-                .mapValues {
-                    try {
-                        val section = it.value as Map<String, Map<String, Int>>
+            .mapValues {
+                try {
+                    val section = it.value as Map<String, Map<String, Int>>
 
-                        return@mapValues Leaderboard(it.key, section.mapValues { stat ->
-                            stat.value.map { entry ->
-                                LeaderboardEntry(entry.key, entry.value)
-                            }.toMutableList()
-                        }.toMutableMap())
-                    } catch (e: Exception) {
-                        println("Failed to load leader-board for scope '${it.key}'")
-                        e.printStackTrace()
-                        return@mapValues null
-                    }
+                    return@mapValues Leaderboard(it.key, section.mapValues { stat ->
+                        stat.value.map { entry ->
+                            LeaderboardEntry(entry.key, entry.value)
+                        }.toMutableList()
+                    }.toMutableMap())
+                } catch (e: Exception) {
+                    println("Failed to load leader-board for scope '${it.key}'")
+                    e.printStackTrace()
+                    return@mapValues null
                 }
-                .filterValues { it != null }
-                .mapValues { it.value!! }
-                .forEach { leaderboards[it.key] = it.value }
+            }
+            .filterValues { it != null }
+            .mapValues { it.value!! }
+            .forEach { leaderboards[it.key] = it.value }
     }
 
     private fun save() {
         file.delete()
         file.writeText(
-                yaml.dumpAsMap(
-                        leaderboards.mapValues { it.value.toMap() }
-                )
+            yaml.dumpAsMap(
+                leaderboards.mapValues { it.value.toMap() }
+            )
         )
     }
 

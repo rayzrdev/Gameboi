@@ -6,5 +6,5 @@ import java.awt.Image
 
 val FIGHT_HAT_SLOT = ItemSlot("fight-hat", "Fight Hat")
 
-open class FightHatItem(internalName: String, name: String, cost: Int, val image: Image)
-    : ShopItem(internalName, name, cost, FIGHT_HAT_SLOT, 1)
+open class FightHatItem(internalName: String, name: String, cost: Int, val image: Image) :
+    ShopItem(internalName, name, cost, FIGHT_HAT_SLOT, 1)

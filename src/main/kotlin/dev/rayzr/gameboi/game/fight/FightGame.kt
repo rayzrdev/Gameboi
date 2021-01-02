@@ -23,40 +23,40 @@ object Images {
 
 object FightGame : Game(800, 600, "Fight", 2) {
     private val attacks = listOf(
-            Attack(
-                    name = "punch",
-                    emoji = "\ud83e\udd1c", // right fist
-                    damage = 5..7,
-                    attackChance = 0.75,
-                    messages = listOf(
-                            "was punched in the gut by",
-                            "was punched in the face by",
-                            "was punched in the stomach by"
-                    )
-            ),
-            Attack(
-                    name = "kick",
-                    emoji = "\ud83d\udc5e", // shoe
-                    damage = 6..10,
-                    attackChance = 0.60,
-                    messages = listOf(
-                            "was kicked in the gut by",
-                            "was drop-kicked by",
-                            "was kicked in the butt by"
-                    )
-            ),
-            Attack(
-                    name = "slam",
-                    emoji = "\u270a", // open fist
-                    damage = 9..20,
-                    attackChance = 0.35,
-                    messages = listOf(
-                            "was slammed on the head with a ladder by",
-                            "was slammed in the face with a hammer by",
-                            "was slammed on the head with a metal door by",
-                            "was slammed into the wall by"
-                    )
+        Attack(
+            name = "punch",
+            emoji = "\ud83e\udd1c", // right fist
+            damage = 5..7,
+            attackChance = 0.75,
+            messages = listOf(
+                "was punched in the gut by",
+                "was punched in the face by",
+                "was punched in the stomach by"
             )
+        ),
+        Attack(
+            name = "kick",
+            emoji = "\ud83d\udc5e", // shoe
+            damage = 6..10,
+            attackChance = 0.60,
+            messages = listOf(
+                "was kicked in the gut by",
+                "was drop-kicked by",
+                "was kicked in the butt by"
+            )
+        ),
+        Attack(
+            name = "slam",
+            emoji = "\u270a", // open fist
+            damage = 9..20,
+            attackChance = 0.35,
+            messages = listOf(
+                "was slammed on the head with a ladder by",
+                "was slammed in the face with a hammer by",
+                "was slammed on the head with a metal door by",
+                "was slammed into the wall by"
+            )
+        )
     )
 
     override fun begin(match: Match) {
@@ -76,8 +76,10 @@ object FightGame : Game(800, 600, "Fight", 2) {
             var output = ":thinking: **${data.currentPlayer.player.user.name}**'s turn!"
 
             when (data.lastHitResult) {
-                HitResult.HIT -> output = ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**! **${data.currentPlayer.player.user.name}** is now down to **${data.currentPlayer.health}/100** HP.\n\n$output"
-                HitResult.MISS -> output = ":x: **${data.otherPlayer.player.user.name}** tried to ${data.lastAttack?.attack?.name} **${data.currentPlayer.player.user.name}**, but missed!\n\n$output"
+                HitResult.HIT -> output =
+                    ":boom: **${data.currentPlayer.player.user.name}** ${data.lastAttack?.attack?.messages?.random()} **${data.otherPlayer.player.user.name}**! **${data.currentPlayer.player.user.name}** is now down to **${data.currentPlayer.health}/100** HP.\n\n$output"
+                HitResult.MISS -> output =
+                    ":x: **${data.otherPlayer.player.user.name}** tried to ${data.lastAttack?.attack?.name} **${data.currentPlayer.player.user.name}**, but missed!\n\n$output"
                 HitResult.NONE -> Unit
             }
 
@@ -111,7 +113,12 @@ object FightGame : Game(800, 600, "Fight", 2) {
                                     else -> Images.textMiss
                                 }
 
-                                drawImage(textImage, data.currentPlayer.offset.x, data.currentPlayer.offset.y - 17, null)
+                                drawImage(
+                                    textImage,
+                                    data.currentPlayer.offset.x,
+                                    data.currentPlayer.offset.y - 17,
+                                    null
+                                )
                             }
                         }
                     }

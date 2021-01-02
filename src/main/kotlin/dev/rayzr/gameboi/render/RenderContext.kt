@@ -53,8 +53,8 @@ class RenderContext(val match: Match, private val width: Int, height: Int) {
 
     fun draw(embedDescription: String? = null, messageContents: String? = null, callback: (Message) -> Unit = {}) {
         val builder = EmbedBuilder().setImage("attachment://render.png")
-                .setFooter("${match.game.name} || Players: ${match.players.joinToString(", ") { it.user.name }}")
-                .setColor(0x353940)
+            .setFooter("${match.game.name} || Players: ${match.players.joinToString(", ") { it.user.name }}")
+            .setColor(0x353940)
 
         if (embedDescription != null) {
             builder.setDescription(embedDescription)
@@ -63,7 +63,7 @@ class RenderContext(val match: Match, private val width: Int, height: Int) {
         val embed = builder.build()
 
         val messageAction = match.channel.sendFile(toBytes(), "render.png")
-                .embed(embed)
+            .embed(embed)
 
         if (messageContents != null) {
             messageAction.append(messageContents)

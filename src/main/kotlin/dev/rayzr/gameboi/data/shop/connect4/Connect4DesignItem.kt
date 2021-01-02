@@ -6,5 +6,5 @@ import java.awt.Image
 
 val CONNECT_4_DESIGN_SLOT = ItemSlot("connect4-design", "Connect 4 Design")
 
-open class Connect4DesignItem(internalName: String, name: String, cost: Int, val image: Image)
-    : ShopItem(internalName, name, cost, CONNECT_4_DESIGN_SLOT, 1)
+open class Connect4DesignItem(internalName: String, name: String, cost: Int, val image: Image) :
+    ShopItem(internalName, name, cost, CONNECT_4_DESIGN_SLOT, 1)

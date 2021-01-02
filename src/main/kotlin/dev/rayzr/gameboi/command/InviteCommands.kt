@@ -18,8 +18,15 @@ fun checkPermissions(event: GuildMessageReceivedEvent): Boolean {
         return false
     }
 
-    if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_MANAGE, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_EMBED_LINKS)) {
-        event.channel.sendMessage(":x: This bot is missing the permissions required to manage/delete messages, attach images, and embed links!").queue()
+    if (!event.guild.selfMember.hasPermission(
+            event.channel,
+            Permission.MESSAGE_MANAGE,
+            Permission.MESSAGE_ATTACH_FILES,
+            Permission.MESSAGE_EMBED_LINKS
+        )
+    ) {
+        event.channel.sendMessage(":x: This bot is missing the permissions required to manage/delete messages, attach images, and embed links!")
+            .queue()
         return false
     }
 
@@ -28,7 +35,8 @@ fun checkPermissions(event: GuildMessageReceivedEvent): Boolean {
 
 fun checkValidPlayer(player: User) = !player.isBot
 
-object Connect4Invite : Command("connect4", "Invites a player to play Connect4 with you!", "connect4 <other>", Categories.GAMES) {
+object Connect4Invite :
+    Command("connect4", "Invites a player to play Connect4 with you!", "connect4 <other>", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return
@@ -36,7 +44,8 @@ object Connect4Invite : Command("connect4", "Invites a player to play Connect4 w
 
         if (event.message.mentionedMembers.size < 1) {
             event.channel.sendMessage(":x: Please mention the user you would like to play with!").queue {
-                it.textChannel.deleteMessages(listOf(it, event.message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
+                it.textChannel.deleteMessages(listOf(it, event.message))
+                    .queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }
@@ -60,7 +69,8 @@ object FightInvite : Command("fight", "Invites a player to play Fight with you!"
 
         if (event.message.mentionedMembers.size < 1) {
             event.channel.sendMessage(":x: Please mention the user you would like to play with!").queue {
-                it.textChannel.deleteMessages(listOf(it, event.message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
+                it.textChannel.deleteMessages(listOf(it, event.message))
+                    .queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
             }
             return
         }
@@ -76,7 +86,7 @@ object FightInvite : Command("fight", "Invites a player to play Fight with you!"
     }
 }
 
-object Twenty48Invite: Command("2048", "Starts a 2048 game.", "2048", Categories.GAMES) {
+object Twenty48Invite : Command("2048", "Starts a 2048 game.", "2048", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return
@@ -86,7 +96,7 @@ object Twenty48Invite: Command("2048", "Starts a 2048 game.", "2048", Categories
     }
 }
 
-object HangmanInvite: Command("hangman", "Starts a hangman game.", "hangman", Categories.GAMES) {
+object HangmanInvite : Command("hangman", "Starts a hangman game.", "hangman", Categories.GAMES) {
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         if (!checkPermissions(event)) {
             return

@@ -14,7 +14,7 @@ object HelpCommand : Command("help", "Shows you help for Gameboi", category = Ca
     override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
         GuildSettingsManager.getGuildSettingsFor(event.guild).thenAccept { guildSettings ->
             val commands = Gameboi.commands.groupBy { it.category }
-                    .toSortedMap(Comparator.comparingInt { it.priority })
+                .toSortedMap(Comparator.comparingInt { it.priority })
 
             val embed = EmbedBuilder().run {
                 setDescription(commands.map { category ->
@@ -24,7 +24,11 @@ object HelpCommand : Command("help", "Shows you help for Gameboi", category = Ca
 
                     "> __**${category.key.name}**__\n\n $categoryCommands"
                 }.joinToString("\n\n"))
-                setAuthor("Gameboi Help Commands", "https://github.com/RayzrDev/Gameboi", event.jda.selfUser.effectiveAvatarUrl)
+                setAuthor(
+                    "Gameboi Help Commands",
+                    "https://github.com/RayzrDev/Gameboi",
+                    event.jda.selfUser.effectiveAvatarUrl
+                )
                 setColor(0x353940)
                 build()
             }
@@ -53,7 +57,8 @@ object AboutCommand : Command("about", "Shows you more information about Gameboi
         val embed = EmbedBuilder().run {
             setTitle("What is Gameboi?")
 
-            setDescription("""
+            setDescription(
+                """
                 **Gameboi** is a simple Discord bot made for Discord Hack Week 2019 with a plethora of small games you can play, a charming and nostalgic pixel art style, and a global currency and rewards system!
                 
                 With **2 multiplayer** games (Fight & Connect 4) and **2 singleplayer** games (Hangman & 2048), Gameboi is sure to liven up any server, and the charm of its retro pixel-art graphics feels right at home to any old-school gamer.
@@ -61,13 +66,19 @@ object AboutCommand : Command("about", "Shows you more information about Gameboi
                 :tada: Click [here](${event.jda.getInviteUrl(Permission.MESSAGE_MANAGE)}) to add **Gameboi** to your server!
                 :link: Click [here](https://github.com/RayzrDev/Gameboi) to check out the source code for **Gameboi**!
                 :heart: Click [here](https://patreon.com/Rayzr522) if you want to support **Gameboi** and its creators!
-            """.trimIndent())
+            """.trimIndent()
+            )
 
             addField("Servers", "%,d".format(Gameboi.shardManager.guilds.size), true)
             addField("Users", "%,d".format(Gameboi.shardManager.users.size), true)
 
             val shardInfo = event.jda.shardInfo
-            setFooter("Created by Rayzr522#9429 and zp4rker#3333 || Shard %d/%d".format(shardInfo.shardId + 1, shardInfo.shardTotal))
+            setFooter(
+                "Created by Rayzr522#9429 and zp4rker#3333 || Shard %d/%d".format(
+                    shardInfo.shardId + 1,
+                    shardInfo.shardTotal
+                )
+            )
 
             setImage("https://raw.githubusercontent.com/RayzrDev/Gameboi/master/res/banner.png")
 
@@ -122,7 +133,11 @@ object StatsCommand : Command("stats", "Shows your game stats", "stats [game]", 
                             addStat(this, data, "Total Guesses", "hangman.total-guesses")
                             addStat(this, data, "Correct Guesses", "hangman.correct-guesses")
                             // TODO: Method for computed stats?
-                            addField("Accuracy", "${((data.getStat("hangman.correct-guesses") * 100.0) / data.getStat("hangman.total-guesses")).roundToInt()}%", true)
+                            addField(
+                                "Accuracy",
+                                "${((data.getStat("hangman.correct-guesses") * 100.0) / data.getStat("hangman.total-guesses")).roundToInt()}%",
+                                true
+                            )
                             addStat(this, data, "Wins", "hangman.wins")
                         }
                         "2048" -> {

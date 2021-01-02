@@ -38,26 +38,23 @@ fun main() {
 
     // Init JDA
     Gameboi.shardManager = DefaultShardManagerBuilder.create(
-            GatewayIntent.GUILD_MESSAGES,
-            GatewayIntent.GUILD_MESSAGE_REACTIONS
+        GatewayIntent.GUILD_MESSAGES,
+        GatewayIntent.GUILD_MESSAGE_REACTIONS
     )
-            .setShardsTotal(Gameboi.shardCount)
-            .setToken(Gameboi.token)
-            .addEventListeners(Gameboi, ReactionListener, MessageListener)
-            .build()
-
-//    val jda = JDABuilder(Gameboi.token)
-//            .addEventListeners(Gameboi, ReactionListener, MessageListener)
-//            .build()
-//            .awaitReady()
+        .setShardsTotal(Gameboi.shardCount)
+        .setToken(Gameboi.token)
+        .addEventListeners(Gameboi, ReactionListener, MessageListener)
+        .build()
 
     // Generate invite
-    println(Gameboi.shardManager.shards.first().getInviteUrl(
+    println(
+        Gameboi.shardManager.shards.first().getInviteUrl(
             Permission.MESSAGE_WRITE,
             Permission.MESSAGE_MANAGE,
             Permission.MESSAGE_EMBED_LINKS,
             Permission.MESSAGE_ATTACH_FILES
-    ))
+        )
+    )
 
     if (Gameboi.updateStatus) {
         Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence() }
@@ -93,28 +90,28 @@ object Gameboi : EventListener {
     }
 
     val commands: List<Command> = listOf(
-            // Info
-            HelpCommand,
-            InviteCommand,
-            AboutCommand,
-            PingCommand,
-            StatsCommand,
-            // Invites
-            // Multiplayer
-            Connect4Invite,
-            FightInvite,
-            // Singleplayer
-            Twenty48Invite,
-            HangmanInvite,
-            // Match commands
-            QuitCommand,
-            // Shop commands
-            ShopCommand,
-            BuyCommand,
-            InventoryCommand,
-            EquipCommand,
-            // Settings commands
-            SetPrefixCommand
+        // Info
+        HelpCommand,
+        InviteCommand,
+        AboutCommand,
+        PingCommand,
+        StatsCommand,
+        // Invites
+        // Multiplayer
+        Connect4Invite,
+        FightInvite,
+        // Singleplayer
+        Twenty48Invite,
+        HangmanInvite,
+        // Match commands
+        QuitCommand,
+        // Shop commands
+        ShopCommand,
+        BuyCommand,
+        InventoryCommand,
+        EquipCommand,
+        // Settings commands
+        SetPrefixCommand
     )
 
     override fun onEvent(event: GenericEvent) {
@@ -131,10 +128,10 @@ object Gameboi : EventListener {
                 }
 
                 val prefixes = listOfNotNull(
-                        taggedBotRole?.asMention,
-                        "<@${event.jda.selfUser.id}>",
-                        "<@!${event.jda.selfUser.id}>",
-                        guildSettings.realPrefix
+                    taggedBotRole?.asMention,
+                    "<@${event.jda.selfUser.id}>",
+                    "<@!${event.jda.selfUser.id}>",
+                    guildSettings.realPrefix
                 )
 
                 val remainder = prefixes.find {
@@ -151,15 +148,20 @@ object Gameboi : EventListener {
                 if (command != null) {
                     command.handle(event, args)
                 } else {
-                    MatchManager[event.author]?.run { game.handleMessage(Player[event.author], this, event.message) }
+                    MatchManager[event.author]?.run {
+                        game.handleMessage(Player[event.author], this, event.message)
+                    }
                 }
             }
         }
     }
 
     fun updatePresence() {
-        shardManager.setPresence(OnlineStatus.ONLINE, Activity.watching(
+        shardManager.setPresence(
+            OnlineStatus.ONLINE,
+            Activity.watching(
                 "over ${shardManager.guilds.size} guilds | ${prefix}help"
-        ))
+            )
+        )
     }
 }

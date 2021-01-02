@@ -25,28 +25,28 @@ object GuildSettingsManager {
         guildSettings.clear()
 
         raw.mapKeys { it.key }
-                .mapValues {
-                    try {
-                        val section = it.value as Map<String, Any>
+            .mapValues {
+                try {
+                    val section = it.value as Map<String, Any>
 
-                        return@mapValues GuildSettings(it.key, section["prefix"]?.toString())
-                    } catch (e: Exception) {
-                        println("Failed to load guild settings for player with ID '${it.key}'")
-                        e.printStackTrace()
-                        return@mapValues null
-                    }
+                    return@mapValues GuildSettings(it.key, section["prefix"]?.toString())
+                } catch (e: Exception) {
+                    println("Failed to load guild settings for player with ID '${it.key}'")
+                    e.printStackTrace()
+                    return@mapValues null
                 }
-                .filterValues { it != null }
-                .mapValues { it.value!! }
-                .forEach { guildSettings[it.key] = it.value }
+            }
+            .filterValues { it != null }
+            .mapValues { it.value!! }
+            .forEach { guildSettings[it.key] = it.value }
     }
 
     private fun save() {
         file.delete()
         file.writeText(
-                yaml.dumpAsMap(
-                        guildSettings.mapValues { it.value.toMap() }
-                )
+            yaml.dumpAsMap(
+                guildSettings.mapValues { it.value.toMap() }
+            )
         )
     }
 

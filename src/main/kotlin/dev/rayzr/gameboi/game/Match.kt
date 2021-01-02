@@ -15,7 +15,8 @@ class Match(val game: Game, val channel: TextChannel) {
     var data: MatchData? = null
     private var isEnded = false
 
-    private fun canJoin(player: Player) = player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
+    private fun canJoin(player: Player) =
+        player.currentMatch == null && !players.contains(player) && players.size < game.maxPlayers
 
     fun addPlayer(player: Player) {
         if (!canJoin(player)) {
@@ -63,8 +64,10 @@ class Match(val game: Game, val channel: TextChannel) {
             return
         }
 
-        scheduledFuture = channel.sendMessage(":x: Your **${game.name}** match has timed out, ${players.joinToString(" ") { it.user.asMention }}!").queueAfter(MATCH_TIMEOUT, TimeUnit.MILLISECONDS) {
-            end()
-        }
+        scheduledFuture =
+            channel.sendMessage(":x: Your **${game.name}** match has timed out, ${players.joinToString(" ") { it.user.asMention }}!")
+                .queueAfter(MATCH_TIMEOUT, TimeUnit.MILLISECONDS) {
+                    end()
+                }
     }
 }

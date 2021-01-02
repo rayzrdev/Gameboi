@@ -7,12 +7,12 @@ import dev.rayzr.gameboi.data.shop.fight.TophatHatItem
 
 fun initShopItems() {
     listOf(
-            // Hats
-            RibbitHatItem,
-            TophatHatItem,
-            // Connect 4 designs
-            CircleConnect4DesignItem,
-            StarConnect4DesignItem
+        // Hats
+        RibbitHatItem,
+        TophatHatItem,
+        // Connect 4 designs
+        CircleConnect4DesignItem,
+        StarConnect4DesignItem
     ).forEach {
         ShopRegistry.register(it)
     }

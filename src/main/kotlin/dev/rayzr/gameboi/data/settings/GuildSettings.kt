@@ -7,7 +7,7 @@ class GuildSettings(var guild: Long, var prefix: String? = null) {
 
     fun toMap(): Map<String, Any?> {
         return mapOf(
-                "prefix" to prefix
+            "prefix" to prefix
         )
     }
 }

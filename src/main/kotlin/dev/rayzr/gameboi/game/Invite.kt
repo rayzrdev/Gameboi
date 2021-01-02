@@ -8,17 +8,23 @@ import net.dv8tion.jda.api.entities.MessageReaction
 import net.dv8tion.jda.api.entities.TextChannel
 import java.util.concurrent.TimeUnit
 
-class Invite(val channel: TextChannel, val from: Player, val to: Player, val game: Game, private val life: Long = 120000) {
+class Invite(
+    val channel: TextChannel,
+    val from: Player,
+    val to: Player,
+    val game: Game,
+    private val life: Long = 120000
+) {
     var message: Message? = null
 
     init {
         channel.sendMessage(
-                EmbedBuilder()
-                        .setThumbnail(from.user.avatarUrl)
-                        .setTitle("${from.user.name} has invited you to play ${game.name}!")
-                        .setDescription("Press the check mark below to accept!")
-                        .setFooter("This invite will expire in ${life / 60000} minutes")
-                        .build()
+            EmbedBuilder()
+                .setThumbnail(from.user.avatarUrl)
+                .setTitle("${from.user.name} has invited you to play ${game.name}!")
+                .setDescription("Press the check mark below to accept!")
+                .setFooter("This invite will expire in ${life / 60000} minutes")
+                .build()
         ).queue({
             message = it
 
@@ -48,7 +54,8 @@ class Invite(val channel: TextChannel, val from: Player, val to: Player, val gam
                 // Check *again*
                 if (from.currentMatch != null || to.currentMatch != null) {
                     message.channel.sendMessage(":x: One of you has already joined another match!").queue {
-                        it.textChannel.deleteMessages(listOf(it, message)).queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
+                        it.textChannel.deleteMessages(listOf(it, message))
+                            .queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
                         InviteManager.remove(to.user)
                     }
                     return

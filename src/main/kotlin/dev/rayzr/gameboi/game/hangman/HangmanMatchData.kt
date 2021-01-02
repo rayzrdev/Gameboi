@@ -25,13 +25,13 @@ class HangmanMatchData : MatchData {
 class HangmanStage(val image: Image) {
     companion object {
         val stages = listOf(
-                HangmanStage(Images.get("character/head.png")),
-                HangmanStage(Images.get("character/body.png")),
-                HangmanStage(Images.get("character/leg-left.png")),
-                HangmanStage(Images.get("character/leg-right.png")),
-                HangmanStage(Images.get("character/arm-left.png")),
-                HangmanStage(Images.get("character/arm-right.png")),
-                HangmanStage(Images.get("dead.png"))
+            HangmanStage(Images.get("character/head.png")),
+            HangmanStage(Images.get("character/body.png")),
+            HangmanStage(Images.get("character/leg-left.png")),
+            HangmanStage(Images.get("character/leg-right.png")),
+            HangmanStage(Images.get("character/arm-left.png")),
+            HangmanStage(Images.get("character/arm-right.png")),
+            HangmanStage(Images.get("dead.png"))
         )
     }
 }

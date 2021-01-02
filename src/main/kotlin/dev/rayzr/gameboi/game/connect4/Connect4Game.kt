@@ -14,7 +14,8 @@ import java.awt.image.BufferedImage
 import kotlin.math.max
 
 object Connect4Game : Game(700, 600, "Connect 4", 2) {
-    private val emojis = listOf("\u0031\u20e3", "\u0032\u20e3", "\u0033\u20e3", "\u0034\u20e3", "\u0035\u20e3", "\u0036\u20e3")
+    private val emojis =
+        listOf("\u0031\u20e3", "\u0032\u20e3", "\u0033\u20e3", "\u0034\u20e3", "\u0035\u20e3", "\u0036\u20e3")
 
     private val boardImage = RenderUtils.loadImage("connect4/board.png")!!
 
@@ -70,7 +71,8 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
                             // Draw designs if applicable
 //                            println("$playerData - ${playerData?.equipment?.get(CONNECT_4_DESIGN_SLOT.internalName)}")
                             if (playerData != null && playerData.equipment[CONNECT_4_DESIGN_SLOT.internalName] is Connect4DesignItem) {
-                                val item = playerData.equipment[CONNECT_4_DESIGN_SLOT.internalName] as Connect4DesignItem
+                                val item =
+                                    playerData.equipment[CONNECT_4_DESIGN_SLOT.internalName] as Connect4DesignItem
                                 drawImage(item.image, realX, realY, null)
                             }
                         }
