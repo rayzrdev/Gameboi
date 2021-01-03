@@ -9,6 +9,10 @@ import dev.rayzr.gameboi.game.Player
 import dev.rayzr.gameboi.listener.MessageListener
 import dev.rayzr.gameboi.listener.ReactionListener
 import dev.rayzr.gameboi.manager.MatchManager
+import dev.rayzr.gameboi.manager.RenderManager
+import io.javalin.Javalin
+import io.javalin.apibuilder.ApiBuilder.get
+import io.javalin.apibuilder.ApiBuilder.path
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
@@ -59,6 +63,15 @@ fun main() {
     if (Gameboi.updateStatus) {
         Timer().scheduleAtFixedRate(0L, 30000L) { Gameboi.updatePresence() }
     }
+
+    Javalin.create().routes {
+        path("matches") {
+            path(":match-id") {
+                // TODO: get state via API route
+                get("render/:state-id", RenderManager::handleRenderReq)
+            }
+        }
+    }.start(Gameboi.port)
 }
 
 object Gameboi : EventListener {
@@ -70,6 +83,8 @@ object Gameboi : EventListener {
     var shardCount: Int = 1
     var updateStatus: Boolean = true
     var errorLife: Long = 0
+    lateinit var host: String
+    var port: Int = 1
 
 
     fun load() {
@@ -87,6 +102,8 @@ object Gameboi : EventListener {
         shardCount = (output["shards"] ?: 1) as Int
         updateStatus = output["update-status"] as Boolean? ?: true
         errorLife = output["error-life"]?.toString()?.toLong() ?: 15000
+        host = output["host"].toString()
+        port = (output["port"] ?: 7000) as Int
     }
 
     val commands: List<Command> = listOf(

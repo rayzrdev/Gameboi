@@ -1,5 +1,6 @@
 package dev.rayzr.gameboi.render
 
+import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.game.Match
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
@@ -7,12 +8,17 @@ import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.util.*
 import javax.imageio.ImageIO
+import kotlin.collections.LinkedHashMap
 
 class RenderContext(val match: Match, private val width: Int, height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() = image.createGraphics()
+
+    val state = LinkedHashMap<UUID, ByteArray>()
+    var currentStateId: UUID? = null
 
     var lastMessage: Message? = null
 
@@ -52,7 +58,17 @@ class RenderContext(val match: Match, private val width: Int, height: Int) {
     }
 
     fun draw(embedDescription: String? = null, messageContents: String? = null, callback: (Message) -> Unit = {}) {
-        val builder = EmbedBuilder().setImage("attachment://render.png")
+        val newStateId = UUID.randomUUID()
+        currentStateId = newStateId
+
+        state[newStateId] = toBytes()
+
+        // don't waste too much memory storing too many old copies
+        if (state.size > 5) {
+            state.remove(state.keys.first())
+        }
+
+        val builder = EmbedBuilder().setImage("${Gameboi.host}/matches/${match.id}/render/${newStateId}")
             .setFooter("${match.game.name} || Players: ${match.players.joinToString(", ") { it.user.name }}")
             .setColor(0x353940)
 
@@ -62,16 +78,10 @@ class RenderContext(val match: Match, private val width: Int, height: Int) {
 
         val embed = builder.build()
 
-        val messageAction = match.channel.sendFile(toBytes(), "render.png")
-            .embed(embed)
+        val future = lastMessage?.editMessage(embed)?.content(messageContents)?.submit()
+            ?: match.channel.sendMessage(embed).content(messageContents).submit()
 
-        if (messageContents != null) {
-            messageAction.append(messageContents)
-        }
-
-        messageAction.queue {
-            lastMessage?.delete()?.queue()
-
+        future.thenAccept {
             lastMessage = it
             callback.invoke(it)
         }
