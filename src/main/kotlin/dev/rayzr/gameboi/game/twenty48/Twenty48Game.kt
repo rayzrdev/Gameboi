@@ -323,8 +323,9 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
         if (!emojis.contains(reaction.reactionEmote.name)) return
 
+        reaction.removeReaction(player.user).queue()
+
         if (!match.players.contains(player)) {
-            reaction.removeReaction(player.user).queue()
             return
         }
 
@@ -335,11 +336,7 @@ object Twenty48Game : Game(600, 600, "2048", 1) {
             else -> Direction.RIGHT
         }
 
-        if (!moveTiles(match, direction)) {
-            reaction.removeReaction(player.user).queue()
-            return
-        }
-
+        moveTiles(match, direction)
     }
 
     private fun getData(match: Match) = match.data as Twenty48MatchData

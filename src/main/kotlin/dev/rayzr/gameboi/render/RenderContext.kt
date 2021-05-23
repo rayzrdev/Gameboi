@@ -1,20 +1,31 @@
 package dev.rayzr.gameboi.render
 
+import dev.rayzr.gameboi.Gameboi
 import dev.rayzr.gameboi.game.Match
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.MessageEmbed
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.util.*
 import javax.imageio.ImageIO
+
+data class RenderOptions(
+    val embed: MessageEmbed,
+    val messageContents: String?,
+    val reactions: List<String>
+)
 
 class RenderContext(val match: Match, private val width: Int, height: Int) {
     val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val graphics: Graphics2D
         get() = image.createGraphics()
 
+    var lastRenderOptions: RenderOptions? = null
     var lastMessage: Message? = null
+    var lastRender: ByteArray? = null
 
     fun clear() {
         graphics.clearRect(0, 0, image.width, image.height)
@@ -51,32 +62,44 @@ class RenderContext(val match: Match, private val width: Int, height: Int) {
         }
     }
 
-    fun draw(embedDescription: String? = null, messageContents: String? = null, callback: (Message) -> Unit = {}) {
-        val builder = EmbedBuilder().setImage("attachment://render.png")
+    fun draw(embedDescription: String? = null, messageContents: String? = null, reactions: List<String> = emptyList()) {
+        // this does nothing other than just defeat caching
+        val state = UUID.randomUUID()
+        val imageUrl = "${Gameboi.host}/matches/${match.id}/render?state=${state}"
+        val embed = EmbedBuilder()
+            .setImage(imageUrl)
             .setFooter("${match.game.name} || Players: ${match.players.joinToString(", ") { it.user.name }}")
             .setColor(0x353940)
+            .apply { if (embedDescription != null) setDescription(embedDescription) }
+            .build()
 
-        if (embedDescription != null) {
-            builder.setDescription(embedDescription)
-        }
+        val renderOptions = RenderOptions(embed, messageContents, reactions)
+        lastRender = toBytes()
+        render(renderOptions)
+    }
 
-        val embed = builder.build()
+    fun render(renderOptions: RenderOptions) {
+        lastRenderOptions = renderOptions
+        val future = lastMessage?.editMessage(renderOptions.embed)?.content(renderOptions.messageContents)?.submit()
+            ?: match.channel.sendMessage(renderOptions.embed).content(renderOptions.messageContents).submit()
 
-        val messageAction = match.channel.sendFile(toBytes(), "render.png")
-            .embed(embed)
-
-        if (messageContents != null) {
-            messageAction.append(messageContents)
-        }
-
-        messageAction.queue {
-            lastMessage?.delete()?.queue()
-
-            lastMessage = it
-            callback.invoke(it)
+        future.thenAccept { newMessage ->
+            lastMessage = newMessage
+            renderOptions.reactions.forEach { reaction ->
+                newMessage.addReaction(reaction).queue()
+            }
         }
 
         match.bumpTimeout()
+    }
+
+    fun bump() {
+        val renderOptions = lastRenderOptions
+            ?: throw IllegalStateException("You cannot call bump before having rendered at least once.")
+
+        lastMessage?.delete()?.queue()
+        lastMessage = null
+        render(renderOptions)
     }
 
     private fun toBytes(): ByteArray {

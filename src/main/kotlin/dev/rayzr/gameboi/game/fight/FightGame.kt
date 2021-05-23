@@ -156,8 +156,9 @@ object FightGame : Game(800, 600, "Fight", 2) {
     override fun handleReaction(player: Player, match: Match, reaction: MessageReaction) {
         val data = getData(match)
 
+        reaction.removeReaction(player.user).queue()
+
         if (player != data.currentPlayer.player) {
-            reaction.removeReaction(player.user).queue()
             return
         }
 

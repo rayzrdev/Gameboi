@@ -16,13 +16,8 @@ abstract class Game(private val width: Int, private val height: Int, val name: S
     ) {
         match.renderContext.clear()
         function.invoke(match.renderContext)
-        match.renderContext.draw(embedDescription, messageContents) {
-            addReactions(it, reactions)
-        }
+        match.renderContext.draw(embedDescription, messageContents, reactions)
     }
-
-    private fun addReactions(message: Message, reactions: List<String>) =
-        reactions.forEach { message.addReaction(it).queue() }
 
     abstract fun begin(match: Match)
     abstract fun handleMessage(player: Player, match: Match, message: Message)

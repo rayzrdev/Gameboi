@@ -2,3 +2,5 @@ prefix: "!"
 token: "12396510498gmj0194c8g1m0394gjm"
 shards: 1
 update-status: true
+host: "http://localhost:7000"
+port: 7000

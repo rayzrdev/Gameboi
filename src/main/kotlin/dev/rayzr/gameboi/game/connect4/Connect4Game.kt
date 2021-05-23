@@ -104,8 +104,9 @@ object Connect4Game : Game(700, 600, "Connect 4", 2) {
         val data = getData(match)
         val board = data.board
 
+        reaction.removeReaction(player.user).queue()
+
         if (match.players.indexOf(player) != data.currentPlayer) {
-            reaction.removeReaction(player.user).queue()
             return
         }
 
