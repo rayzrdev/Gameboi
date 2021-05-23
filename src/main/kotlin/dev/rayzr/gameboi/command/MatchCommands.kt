@@ -20,3 +20,21 @@ object QuitCommand : Command("quit", "Quits you from your current match", catego
         }
     }
 }
+
+object BumpCommand :
+    Command("bump", "Bumps your match timeout and brings it to the bottom of chat", category = Categories.MATCH) {
+    override fun handle(event: GuildMessageReceivedEvent, args: List<String>) {
+        val player = Player[event.author]
+        val match = player.currentMatch
+
+        if (match == null) {
+            event.channel.sendMessage(":x: You are not in a match currently!").queue {
+                it.textChannel.deleteMessages(listOf(it, event.message))
+                    .queueAfter(Gameboi.errorLife, TimeUnit.MILLISECONDS)
+            }
+            return
+        }
+
+        match.renderContext.bump()
+    }
+}

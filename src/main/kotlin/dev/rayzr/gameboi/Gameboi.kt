@@ -68,7 +68,7 @@ fun main() {
         path("matches") {
             path(":match-id") {
                 // TODO: get state via API route
-                get("render/:state-id", RenderManager::handleRenderReq)
+                get("render", RenderManager::handleRenderReq)
             }
         }
     }.start(Gameboi.port)
@@ -122,6 +122,7 @@ object Gameboi : EventListener {
         HangmanInvite,
         // Match commands
         QuitCommand,
+        BumpCommand,
         // Shop commands
         ShopCommand,
         BuyCommand,
