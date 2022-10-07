@@ -20,7 +20,7 @@ Click [here](https://discordapp.com/oauth2/authorize?scope=bot&client_id=5930905
 
 You can also join the [official RayzrDev server](https://rayzr.dev/join) to play with Gameboi yourself :)
 
-## Download
+## Run
 
 You can download and run the bot yourself by grabbing the latest JAR from [the RayzrDev Jenkins server here](https://ci.rayzr.dev/job/Gameboi). Simply run the JAR from the commandline like so:
 
@@ -30,24 +30,37 @@ java -jar gameboi-VERSION-jar-with-dependencies.jar
 
 A `config.yml` file will be generated in the working directory the first time you run the bot, so just fill in your bot token and prefix and you're good to go!
 
+Alternatively, you can run using the [rayzr522/gameboi](https://hub.docker.com/r/rayzr522/gameboi) Docker image:
+
+```bash
+# create the data directory
+mkdir data
+
+# run the container with the data directory mounted
+docker run --rm -it -v $(pwd)/data:/var/gameboi rayzr522/gameboi
+
+# or if you want it to run in the background and not be removed after it exits
+docker run -v $(pwd)/data:/var/gameboi rayzr522/gameboi
+```
+
 ## Commands
 
-Command | Description
-------- | -----------
-`help` | Shows you help for Gameboi
-`invite` | Gives you an invite link for Gameboi
-`about` | Shows you information about Gameboi
-`ping` | Shows you the bot's ping
-`stats [game]` | Shows your game stats
-`connect4 <other>` | Invites a player to play Connect4 with you!
-`fight <other>` | Invites a player to play Fight with you!
-`2048` | Starts a 2048 game.
-`hangman` | Starts a hangman game.
-`quit` | Quits you from your current match
-`shop` | Lets you see what is available for purchase in the shop
-`buy <item>` | Lets you buy items from the shop
-`inventory` | Shows you what items you currently have
-`equip <slot> <none OR item>` | Lets you equip different items
+| Command                       | Description                                             |
+| ----------------------------- | ------------------------------------------------------- |
+| `help`                        | Shows you help for Gameboi                              |
+| `invite`                      | Gives you an invite link for Gameboi                    |
+| `about`                       | Shows you information about Gameboi                     |
+| `ping`                        | Shows you the bot's ping                                |
+| `stats [game]`                | Shows your game stats                                   |
+| `connect4 <other>`            | Invites a player to play Connect4 with you!             |
+| `fight <other>`               | Invites a player to play Fight with you!                |
+| `2048`                        | Starts a 2048 game.                                     |
+| `hangman`                     | Starts a hangman game.                                  |
+| `quit`                        | Quits you from your current match                       |
+| `shop`                        | Lets you see what is available for purchase in the shop |
+| `buy <item>`                  | Lets you buy items from the shop                        |
+| `inventory`                   | Shows you what items you currently have                 |
+| `equip <slot> <none OR item>` | Lets you equip different items                          |
 
 ## Screenshots
 
