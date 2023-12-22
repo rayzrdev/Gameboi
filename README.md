@@ -1,10 +1,9 @@
+# Gameboi is no longer maintained or hosted.
+
 <img alt="Banner" src="res/banner.png" style="border-radius:10px">
 
 <h1 align="center">Gameboi</h1>
 <p align="center"><i>Made with :heart: by <a href="https://github.com/Rayzr522">@Rayzr522</a> and <a href="https://github.com/zp4rker">@zp4rker</a></i></p>
-
-[![Patreon](http://ionicabizau.github.io/badges/patreon.svg)](https://patreon.com/Rayzr522)
-[![Discord Badge](https://discordapp.com/api/guilds/282207139752050688/embed.png)](https://rayzr.dev/join)
 
 > A simple Discord bot made for Discord Hack Week 2019 with a plethora of small games you can play, as well as a global currency and shop system!
 
@@ -13,12 +12,6 @@
 With 2 multiplayer games (Fight & Connect 4) and 2 singleplayer games (Hangman & 2048), Gameboi is sure to liven up any server, and the charm of its retro pixel-art graphics feels right at home to any old-school gamer.
 
 Head down to [Screenshots](#screenshots) for some screenshots of Gameboi in action! :)
-
-## Invite
-
-Click [here](https://discordapp.com/oauth2/authorize?scope=bot&client_id=593090553856524298&permissions=8192) to invite the bot to your server!
-
-You can also join the [official RayzrDev server](https://rayzr.dev/join) to play with Gameboi yourself :)
 
 ## Run
 
@@ -83,7 +76,3 @@ docker run -v $(pwd)/data:/var/gameboi rayzr522/gameboi
 ### 2048
 
 ![2048](res/screenshots/2048.png)
-
-## Join Me
-
-[![Discord Badge](https://github.com/Rayzr522/ProjectResources/raw/master/RayzrDev/badge-small.png)](https://discord.io/rayzrdevofficial)
